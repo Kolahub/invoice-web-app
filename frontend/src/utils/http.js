@@ -73,15 +73,14 @@ export async function createInvoice(invoiceData) {
   }
 }
 
-export async function updateInvoice({id, updates, signal}) {
+export async function updateInvoice({id, updateData}) {
   try {
     const response = await fetch(`${API_BASE_URL}/invoices/${id}`, {
-      method: 'PATCH',
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(updates),
-      signal,
+      body: JSON.stringify(updateData),
     });
 
     if (!response.ok) {

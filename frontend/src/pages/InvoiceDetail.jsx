@@ -1,39 +1,20 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { fetchInvoiceById, updateInvoice } from '../utils/http';
+import { fetchInvoiceById } from '../utils/http';
 import { format } from 'date-fns';
 import IconArrowLeft from '../assets/icon-arrow-left.svg?react';
-import { FiChevronLeft } from 'react-icons/fi';
-import { FaRegEdit } from 'react-icons/fa';
-import { MdOutlineDeleteOutline } from 'react-icons/md';
-import InvoiceForm from '../components/forms/InvoiceForm';
+
 
 function InvoiceDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const [isEditing, setIsEditing] = useState(false);
   
   const { data: invoice, isPending } = useQuery({
     queryKey: ['invoice', { id }],
     queryFn: ({ queryKey, signal }) => fetchInvoiceById({...queryKey[1], signal}),
   });
 
-  const updateMutation = useMutation({
-    mutationFn: updateInvoice,
-    onSuccess: () => {
-      queryClient.invalidateQueries(['invoice', { id }]);
-      setIsEditing(false);
-    },
-  });
-
-  const handleUpdateInvoice = (updatedInvoice) => {
-    updateMutation.mutate({
-      id,
-      updates: updatedInvoice
-    });
-  };
 
   if (isPending) {
     return <div className="p-8">Loading...</div>;
@@ -57,7 +38,7 @@ function InvoiceDetail() {
     <>
     <div className="pb-10 pt-[65px]">
       <button 
-        onClick={() => navigate(-1)}
+        onClick={() => navigate('/')}
         className="cursor-pointer group flex items-center gap-6 font-bold mb-8"
       >
         <div className="text-pri-100 group-hover:text-pri-200">
@@ -84,7 +65,10 @@ function InvoiceDetail() {
         </div>
         <div className="flex space-x-2">
           <button 
-            onClick={() => setIsEditing(true)}
+            onClick={() => {
+              // setIsEditing(true)
+              navigate('edit')
+            }}
             className="cursor-pointer px-4 py-2 bg-bg-100 hover:bg-sec-100 text-sec-300 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-full font-bold"
           >
             Edit
@@ -173,15 +157,6 @@ function InvoiceDetail() {
         </div>
       </div>
     </div>
-    {/* Edit Invoice Form */}
-    {isEditing && (
-      <InvoiceForm 
-        isOpen={isEditing} 
-        onClose={() => setIsEditing(false)}
-        invoiceToEdit={invoice}
-        onUpdate={handleUpdateInvoice}
-      />
-    )}
   </>
   );
 }

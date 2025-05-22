@@ -159,7 +159,7 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
               className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded font-medium dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
               placeholder="19 Union Terrace"
               defaultValue={initialData?.billFrom?.street || ''}
-              required
+              
             />
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -172,7 +172,7 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
                 className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded font-medium dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
                 placeholder="London"
                 defaultValue={initialData?.billFrom?.city || ''}
-                required
+                
               />
             </div>
             <div>
@@ -184,7 +184,7 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
                 className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded font-medium dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
                 placeholder="E1 3EZ"
                 defaultValue={initialData?.billFrom?.postCode || ''}
-                required
+                
               />
             </div>
             <div className="md:col-span-1">
@@ -196,7 +196,7 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
                 className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded font-medium dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
                 placeholder="United Kingdom"
                 defaultValue={initialData?.billFrom?.country || ''}
-                required
+                
               />
             </div>
           </div>
@@ -218,7 +218,7 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
               className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded font-medium dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
               placeholder="Alex Grim"
               defaultValue={initialData?.billTo?.clientName || ''}
-              required
+              
             />
           </div>
           <div>
@@ -232,7 +232,7 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
               className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded font-medium dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
               placeholder="alexgrim@mail.com"
               defaultValue={initialData?.billTo?.clientEmail || ''}
-              required
+              
             />
           </div>
           <div>
@@ -246,7 +246,7 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
               className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded font-medium dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
               placeholder="84 Church Way"
               defaultValue={initialData?.billTo?.street || ''}
-              required
+              
             />
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -259,7 +259,7 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
                 className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded font-medium dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
                 placeholder="Bradford"
                 defaultValue={initialData?.billTo?.city || ''}
-                required
+                
               />
             </div>
             <div>
@@ -271,7 +271,7 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
                 className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded font-medium dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
                 placeholder="BD1 9PB"
                 defaultValue={initialData?.billTo?.postCode || ''}
-                required
+                
               />
             </div>
             <div className="md:col-span-1">
@@ -282,7 +282,8 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
                 name="clientCountry"
                 className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded font-medium dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
                 placeholder="United Kingdom"
-                required
+                defaultValue={initialData?.billTo?.country || ''}
+                
               />
             </div>
           </div>
@@ -302,7 +303,7 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
               value={invoiceDate}
               onChange={(e) => setInvoiceDate(e.target.value)}
               className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded  font-medium dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
-              required
+              
             />
           </div>
           <div>
@@ -315,7 +316,7 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
                 value={paymentTerms}
                 onChange={(e) => setPaymentTerms(parseInt(e.target.value, 10))}
                 className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded  font-medium dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-purple-500 focus:border-purple-500 appearance-none pr-10"
-                required
+                
               >
                 <option value={1}>Net 1 Day</option>
                 <option value={7}>Net 7 Days</option>
@@ -341,7 +342,7 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
             className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded font-medium dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
             placeholder="Graphic Design"
             defaultValue={initialData?.projectDescription || ''}
-            required
+            
           />
         </div>
       </section>
@@ -359,7 +360,7 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
                   name={`itemName${index}`}
                   defaultValue={item.name}
                   className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded font-medium dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
-                  required
+                  
                 />
               </div>
               <div className="col-span-3 md:col-span-2">
@@ -371,7 +372,7 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
                   value={item.quantity}
                   onChange={(e) => updateItem(item.id, 'quantity', e.target.value)}
                   className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded font-medium dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-purple-500 focus:border-purple-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                  required
+                  
                 />
               </div>
               <div className="col-span-6 md:col-span-2">
@@ -384,7 +385,7 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
                   value={item.price}
                   onChange={(e) => updateItem(item.id, 'price', e.target.value)}
                   className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded font-medium dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-purple-500 focus:border-purple-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                  required
+                  
                 />
               </div>
               <div className="col-span-3 md:col-span-2 flex flex-col">

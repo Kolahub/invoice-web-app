@@ -1,14 +1,20 @@
 import React, { useRef, useEffect } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion as Motion, AnimatePresence } from 'framer-motion';
 import CreateInvoiceForm from './CreateInvoiceForm';
 import { toast } from 'react-toastify';
-import { createInvoice, updateInvoice } from '../../utils/http';
+import { createInvoice, fetchInvoiceById, queryClient, updateInvoice } from '../../utils/http';
+import { redirect, useNavigation, useParams, useSubmit } from 'react-router-dom';
 
-function InvoiceForm({ isOpen, onClose, invoiceToEdit, onUpdate }) {
+function InvoiceForm({ isOpen, onClose, editMode = false }) {
   const formRef = useRef(null);
+  const submit = useSubmit()
+  const params = useParams()
+  const { state } = useNavigation()
   const queryClient = useQueryClient();
-  const isEditMode = !!invoiceToEdit;
+  const isEditMode = editMode;
+
+  const updateIsPending = state === 'submitting';
 
   // Animation variants
   const overlayVariants = {
@@ -39,8 +45,13 @@ function InvoiceForm({ isOpen, onClose, invoiceToEdit, onUpdate }) {
     }
   };
 
+  const { data: invoice } = useQuery({
+    queryKey: ['invoices', params.id],
+    queryFn: ({ signal }) => fetchInvoiceById({ signal, id: params.id }),
+  })
+
   // Create/Update invoice mutation
-  const createMutation = useMutation({
+  const {mutate: createMutation, isPending: createIsPending} = useMutation({
     mutationFn: createInvoice,
     onSuccess: () => {
       queryClient.invalidateQueries(['invoices']);
@@ -53,25 +64,44 @@ function InvoiceForm({ isOpen, onClose, invoiceToEdit, onUpdate }) {
     }
   });
 
-  const updateMutation = useMutation({
-    mutationFn: updateInvoice,
-    onSuccess: () => {
-      queryClient.invalidateQueries(['invoices']);
-      onClose();
-      toast.success('Invoice updated successfully!');
-    },
-    onError: (error) => {
-      console.error('Error updating invoice:', error);
-      toast.error('Failed to update invoice. Please try again.');
-    }
-  });
-
   // Handle form submission
   const handleSubmit = (formData) => {
+    // Create a deep copy of formData to avoid mutating the original
+    const processedData = JSON.parse(JSON.stringify(formData));
+    
+    // Convert string numbers to actual numbers
+    const numberFields = ['total', 'paymentTerms'];
+    numberFields.forEach(field => {
+      if (processedData[field]) {
+        processedData[field] = Number(processedData[field]);
+      }
+    });
+    
+    // Convert postCode to number in billFrom and billTo
+    if (processedData.billFrom?.postCode) {
+      processedData.billFrom.postCode = Number(processedData.billFrom.postCode);
+    }
+    if (processedData.billTo?.postCode) {
+      processedData.billTo.postCode = Number(processedData.billTo.postCode);
+    }
+    
+    // Ensure items is an array and process each item
+    if (processedData.items && Array.isArray(processedData.items)) {
+      processedData.items = processedData.items.map(item => ({
+        ...item,
+        quantity: Number(item.quantity) || 0,
+        price: Number(item.price) || 0,
+        total: Number(item.total) || 0
+      }));
+    }
+
     if (isEditMode) {
-      onUpdate(formData);
+      submit(processedData, { 
+        method: 'PUT',
+        encType: 'application/json'
+      });
     } else {
-      createMutation.mutate(formData);
+      createMutation(processedData);
     }
   };
 
@@ -123,8 +153,8 @@ function InvoiceForm({ isOpen, onClose, invoiceToEdit, onUpdate }) {
               <CreateInvoiceForm 
                 onCancel={onClose} 
                 onSubmit={handleSubmit}
-                isLoading={createMutation.isPending || updateMutation.isPending}
-                initialData={invoiceToEdit}
+                isLoading={createIsPending || updateIsPending}
+                initialData={invoice}
                 isEditMode={isEditMode}
               />
             </div>
@@ -136,3 +166,35 @@ function InvoiceForm({ isOpen, onClose, invoiceToEdit, onUpdate }) {
 }
 
 export default InvoiceForm;
+
+export function Loader({ params }) {
+  return queryClient.fetchQuery({
+    queryKey: ['invoices', params.id],
+    queryFn: ({ signal }) => fetchInvoiceById({ signal, id: params.id }),
+  });
+}
+
+export async function Action({ request, params }) {
+  const invoiceId = params.id;
+  const formData = await request.json();
+  
+  // Ensure we have valid data
+  if (!formData) {
+    throw new Error('No data provided');
+  }
+  
+  console.log('Sending to server:', formData);
+  
+  try {
+    await updateInvoice({ 
+      id: invoiceId, 
+      updateData: formData 
+    });
+    await queryClient.invalidateQueries(['invoices']);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+
+  return redirect('../');
+}
