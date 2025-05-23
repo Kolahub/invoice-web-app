@@ -1,12 +1,27 @@
-import { useQuery } from '@tanstack/react-query';
-import React from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { fetchInvoiceById } from '../utils/http';
+import { fetchInvoiceById, deleteInvoice } from '../utils/http';
+import DeleteConfirmationModal from '../components/ui/DeleteConfirmationModal';
 import { format } from 'date-fns';
 import IconArrowLeft from '../assets/icon-arrow-left.svg?react';
 
 
 function InvoiceDetail() {
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const queryClient = useQueryClient();
+  
+  const { mutate, isPending: isDeleting } = useMutation({
+    mutationFn: deleteInvoice,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['invoices']);
+      navigate('/');
+    },
+  });
+  
+  const handleDelete = () => {
+    mutate({ id });
+  };
   const { id } = useParams();
   const navigate = useNavigate();
   
@@ -50,7 +65,7 @@ function InvoiceDetail() {
       {/* Status Bar */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6 flex justify-between items-center">
         <div className="flex items-center">
-          <span className="mr-4 text-gray-500 dark:text-gray-400">Status</span>
+          <span className="mr-4 text-sec-300 dark:text-gray-400 font-medium">Status</span>
           <div className={`px-4 py-2 rounded-md flex items-center font-bold ${
             invoice.status === 'draft' 
               ? 'bg-gray-100 text-gray-950 dark:bg-gray-900/30 dark:text-gray-400'
@@ -73,8 +88,12 @@ function InvoiceDetail() {
           >
             Edit
           </button>
-          <button className="cursor-pointer px-4 py-2 bg-err-100 hover:bg-err-200 text-white dark:bg-red-900/30 dark:hover:bg-red-800/50 dark:text-red-400 rounded-full font-bold">
-            Delete
+          <button 
+            onClick={() => setIsDeleteModalOpen(true)}
+            className="cursor-pointer px-4 py-2 bg-err-100 hover:bg-err-200 text-white dark:bg-red-900/30 dark:hover:bg-red-800/50 dark:text-red-400 rounded-full font-bold"
+            disabled={isDeleting}
+          >
+            {isDeleting ? 'Deleting...' : 'Delete'}
           </button>
           <button className="cursor-pointer px-4 py-2 bg-pri-100 hover:bg-pri-200 text-white rounded-full font-bold">
             Mark as {invoice.status === 'paid' ? 'Unpaid' : 'Paid'}
@@ -90,9 +109,9 @@ function InvoiceDetail() {
             <span className="text-sec-300">{invoice.invoiceId[0]}</span>
             {invoice.invoiceId.slice(1)}
             </h1>
-            <p className="text-gray-500 dark:text-gray-400">{invoice.projectDescription}</p>
+            <p className="text-sec-300 font-medium dark:text-gray-400">{invoice.projectDescription}</p>
           </div>
-          <div className="text-right text-gray-500 dark:text-gray-400">
+          <div className="text-right text-sec-300 font-medium dark:text-gray-400">
             <p>{invoice.billFrom.street}</p>
             <p>{invoice.billFrom.city}</p>
             <p>{invoice.billFrom.postCode}</p>
@@ -102,13 +121,13 @@ function InvoiceDetail() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           <div>
-            <h3 className="text-gray-500 dark:text-gray-400 text-sm mb-4">Invoice Date</h3>
+            <h3 className="text-sec-300 font-medium dark:text-gray-400 text-sm mb-4">Invoice Date</h3>
             <p className="font-bold">{formatDate(invoice.invoiceDate)}</p>
           </div>
           <div>
-            <h3 className="text-gray-500 dark:text-gray-400 text-sm mb-4">Bill To</h3>
+            <h3 className="text-sec-300 font-medium dark:text-gray-400 text-sm mb-4">Bill To</h3>
             <p className="font-bold mb-2">{invoice.billTo.clientName}</p>
-            <p className="text-gray-500 dark:text-gray-400 text-sm">
+            <p className="text-sec-300 font-medium dark:text-gray-400 text-sm">
               {invoice.billTo.street}<br />
               {invoice.billTo.city}<br />
               {invoice.billTo.postCode}<br />
@@ -116,13 +135,13 @@ function InvoiceDetail() {
             </p>
           </div>
           <div>
-            <h3 className="text-gray-500 dark:text-gray-400 text-sm mb-4">Sent to</h3>
+            <h3 className="text-sec-300 font-medium dark:text-gray-400 text-sm mb-4">Sent to</h3>
             <p className="font-bold">{invoice.billTo.clientEmail}</p>
           </div>
         </div>
 
         <div className="mb-8">
-          <h3 className="text-gray-500 dark:text-gray-400 text-sm mb-4">Payment Due</h3>
+          <h3 className="text-sec-300 font-medium dark:text-gray-400 text-sm mb-4">Payment Due</h3>
           <p className="font-bold">{calculateDueDate(invoice.invoiceDate, invoice.paymentTerms)}</p>
         </div>
 
@@ -130,7 +149,7 @@ function InvoiceDetail() {
         <div className="bg-gray-50 dark:bg-gray-700 rounded-t-lg overflow-hidden">
           <table className="w-full">
             <thead>
-              <tr className="text-left text-gray-500 dark:text-gray-400 text-sm">
+              <tr className="text-left text-sec-300 font-medium dark:text-gray-400 text-sm">
                 <th className="p-4 font-normal">Item Name</th>
                 <th className="p-4 font-normal text-center">QTY.</th>
                 <th className="p-4 font-normal text-right">Price</th>
@@ -141,9 +160,9 @@ function InvoiceDetail() {
               {invoice.items.map((item) => (
                 <tr key={item._id} className="border-b border-gray-100 dark:border-gray-600">
                   <td className="p-4 font-bold">{item.name}</td>
-                  <td className="p-4 text-center text-gray-500 dark:text-gray-400">{item.quantity}</td>
-                  <td className="p-4 text-right">${item.price.toFixed(2)}</td>
-                  <td className="p-4 text-right font-bold">${item.total.toFixed(2)}</td>
+                  <td className="p-4 text-center text-sec-300 font-bold dark:text-gray-400">{item.quantity}</td>
+                  <td className="p-4 text-right text-sec-300 font-bold">£ {item.price.toFixed(2)}</td>
+                  <td className="p-4 text-right font-bold">£ {item.total.toFixed(2)}</td>
                 </tr>
               ))}
             </tbody>
@@ -156,8 +175,15 @@ function InvoiceDetail() {
           <span className="text-2xl font-bold">${invoice.totalAmount.toFixed(2)}</span>
         </div>
       </div>
-    </div>
-  </>
+      </div>
+      
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDelete}
+        invoiceId={invoice?.invoiceId || ''}
+      />
+    </>
   );
 }
 

@@ -1,6 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import { addDays } from 'date-fns';
 import IconDelete from '../../assets/icon-delete.svg?react';
+import DatePicker from '../ui/DatePicker';
+import PaymentTermsDropdown from '../ui/PaymentTermsDropdown'; // Import the new PaymentTermsDropdown component
 
 const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData, isEditMode = false }) => {
   const [items, setItems] = useState(
@@ -18,8 +20,8 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
   const [paymentTerms, setPaymentTerms] = useState(initialData?.paymentTerms || 30);
   const [invoiceDate, setInvoiceDate] = useState(
     initialData?.invoiceDate 
-      ? new Date(initialData.invoiceDate).toISOString().split('T')[0]
-      : new Date().toISOString().split('T')[0]
+      ? new Date(initialData.invoiceDate)
+      : new Date()
   );
 
   // Update item data and calculate total when quantity or price changes
@@ -87,7 +89,7 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
         postCode: formValues.clientPostCode,
         country: formValues.clientCountry
       },
-      invoiceDate: new Date(invoiceDate).toISOString(),
+      invoiceDate: invoiceDate.toISOString(),
       paymentTerms: paymentTerms,
       projectDescription: formValues.projectDescription,
       items: itemsData,
@@ -128,13 +130,13 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
     <div className="h-full flex flex-col">
       <div className="flex-1 overflow-y-auto">
         <form id="invoice-form" onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 rounded-r-2xl p-6 md:p-8">
-          {isLoading && (
+          {/* {isLoading && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
               <div className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg">
                 <p className="text-gray-800 dark:text-white">Saving invoice...</p>
               </div>
             </div>
-          )}
+          )} */}
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
             {isEditMode ? (
               <>
@@ -297,38 +299,21 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
             <label htmlFor="invoiceDate" className="block text-sm font-medium text-sec-300 dark:text-sec-200 mb-2">
               Invoice Date
             </label>
-            <input
-              type="date"
-              id="invoiceDate"
+            <DatePicker
               value={invoiceDate}
-              onChange={(e) => setInvoiceDate(e.target.value)}
-              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded  font-medium dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
-              
+              onChange={(date) => setInvoiceDate(date)}
+              className="w-full"
             />
           </div>
           <div>
             <label htmlFor="paymentTerms" className="block text-sm font-medium text-sec-300 dark:text-sec-200 mb-2">
               Payment Terms
             </label>
-            <div className="relative">
-              <select
-                id="paymentTerms"
-                value={paymentTerms}
-                onChange={(e) => setPaymentTerms(parseInt(e.target.value, 10))}
-                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded  font-medium dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-purple-500 focus:border-purple-500 appearance-none pr-10"
-                
-              >
-                <option value={1}>Net 1 Day</option>
-                <option value={7}>Net 7 Days</option>
-                <option value={14}>Net 14 Days</option>
-                <option value={30}>Net 30 Days</option>
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-pri-100">
-                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-                </svg>
-              </div>
-            </div>
+            <PaymentTermsDropdown
+              value={paymentTerms}
+              onChange={(value) => setPaymentTerms(value)}
+              className="w-full"
+            />
           </div>
         </div>
         <div className="mt-4">
@@ -421,7 +406,7 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
       </div>
       
       {/* Form Actions - Fixed to bottom */}
-      <div className="absolute bottom-0 left-0 right-0 bg-white dark:bg-gray-800 p-6 border-t border-gray-200 dark:border-gray-700 shadow-lg">
+      <div className="absolute bottom-0 left-[103px] right-0 bg-white dark:bg-gray-800 p-6 border-t border-gray-200 dark:border-gray-700 shadow-lg">
         <div className="flex justify-between items-center max-w-full">
           {!isEditMode && (
             <button 
@@ -448,8 +433,9 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
                   name="status"
                   value="update"
                   className="cursor-pointer px-6 py-3 bg-pri-100 text-white font-bold rounded-full hover:bg-pri-200 transition-colors"
+                  disabled={isLoading}
                 >
-                  Save Changes
+                  {isLoading ? 'saving...' : 'Save Changes'}
                 </button>
               </>
             ) : (
@@ -460,8 +446,10 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
                   name="status"
                   value="draft"
                   className="cursor-pointer px-4 py-3 bg-gray-800 text-white font-bold rounded-full hover:bg-gray-700 transition-colors"
+                  disabled={isLoading}
                 >
-                  Save as Draft
+                  
+                  {isLoading ? 'saving...' : 'Save as Draft'}
                 </button>
                 <button
                   type="submit"
@@ -469,8 +457,9 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
                   name="status"
                   value="pending"
                   className="cursor-pointer px-4 py-3 bg-pri-100 text-white font-bold rounded-full hover:bg-purple-500 transition-colors"
+                  disabled={isLoading}
                 >
-                  Save & Send
+                  {isLoading ? 'saving...' : 'Save & Send'}
                 </button>
               </>
             )}

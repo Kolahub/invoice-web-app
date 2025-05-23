@@ -17,30 +17,38 @@ function InvoiceForm({ isOpen, onClose, editMode = false }) {
   const updateIsPending = state === 'submitting';
 
   // Animation variants
-  const overlayVariants = {
-    hidden: { opacity: 0 },
-    visible: { 
-      opacity: 1,
-      transition: { duration: 0.3 }
-    }
-  };
-
   const formVariants = {
-    hidden: { x: '-100%' },
-    visible: { 
-      x: 0,
+    hidden: { 
+      x: '-100%', 
+      opacity: 0,
       transition: { 
         type: 'spring',
         damping: 30,
-        stiffness: 300
+        stiffness: 300,
+        mass: 0.5,
+        duration: 0.2
+      }
+    },
+    visible: { 
+      x: 0,
+      opacity: 1,
+      transition: { 
+        type: 'spring',
+        damping: 30,
+        stiffness: 300,
+        mass: 0.5,
+        duration: 0.2
       }
     },
     exit: { 
-      x: '-100%',
+      x: '-100%', 
+      opacity: 0,
       transition: { 
         type: 'spring',
         damping: 30,
-        stiffness: 300
+        stiffness: 300,
+        mass: 0.5,
+        duration: 0.2
       }
     }
   };
@@ -128,11 +136,12 @@ function InvoiceForm({ isOpen, onClose, editMode = false }) {
         <div className="fixed inset-0 z-50 overflow-hidden">
           {/* Overlay with animation */}
           <Motion.div
-            className="fixed inset-0 bg-black/20"
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            variants={overlayVariants}
+            key="overlay"
+            className="fixed inset-0 bg-black/30"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2, ease: 'easeInOut' }}
             onClick={onClose}
             role="presentation"
             aria-label="Close form overlay"
@@ -140,6 +149,7 @@ function InvoiceForm({ isOpen, onClose, editMode = false }) {
           
           {/* Form Container with animation */}
           <Motion.div
+            key="form"
             ref={formRef}
             className="fixed inset-y-0 left-0 w-full md:max-w-2xl bg-white dark:bg-gray-800 shadow-xl overflow-y-auto pl-[120px]"
             initial="hidden"
