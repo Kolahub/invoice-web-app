@@ -62,7 +62,12 @@ function InvoicesDisplay() {
         </p>
         <p className="text-sm font-medium text-sec-300">{formattedDueDate}</p>
         <p className='text-sm font-medium text-sec-300'>{invoice.billTo.clientName}</p>
-        <p className='font-bold text-sec-400'>{`£${summationItemTotal.toFixed(2)}`}</p>
+        <p className='font-bold text-sec-400'>
+        £ ${new Intl.NumberFormat('en-GB', {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2
+}).format(summationItemTotal)}
+        </p>
 
         <div className="flex items-center gap-5 ">
             <div className={`flex items-center justify-center gap-2 h-10 w-[104px] rounded-lg ${status === 'draft' ? 'bg-gray-100' : status === 'pending' ? 'bg-orange-100' : 'bg-green-100'}`}>

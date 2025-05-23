@@ -44,9 +44,13 @@ export async function fetchInvoiceById({id, signal}) {
     }
 
     const { data } = await response.json();
-    return data
+    return data;
   } catch (error) {
-    console.error(`Error fetching invoice ${id}:`, error);
+    // Don't log AbortError as it's expected when component unmounts
+    if (error.name !== 'AbortError') {
+      console.error(`Error fetching invoice ${id}:`, error);
+    }
+    // Re-throw the error so React Query can handle it
     throw error;
   }
 }
@@ -63,6 +67,8 @@ export async function createInvoice(invoiceData) {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
+      console.log(errorData.message, '😭😭');
+      
       throw new Error(errorData.message || 'Failed to create invoice');
     }
 
@@ -91,6 +97,28 @@ export async function updateInvoice({id, updateData}) {
     return await response.json();
   } catch (error) {
     console.error(`Error updating invoice ${id}:`, error);
+    throw error;
+  }
+}
+
+export async function updateInvoiceStatus({ id, status }) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/invoices/${id}/status`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ status }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Failed to update invoice status');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error(`Error updating status for invoice ${id}:`, error);
     throw error;
   }
 }

@@ -1,11 +1,12 @@
-import React from 'react'
-import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom'
-import RootLayout from './pages/RootLayout'
-import Dashboard from './pages/Dashboard'
-import InvoiceDetail from './pages/InvoiceDetail'
-import { queryClient } from './utils/http'
-import { QueryClientProvider } from '@tanstack/react-query'
-import InvoiceForm, {Action as EditAction, Loader as InvoiceLoader } from './components/forms/InvoiceForm'
+import React from 'react';
+import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
+import RootLayout from './pages/RootLayout';
+import Dashboard from './pages/Dashboard';
+import InvoiceDetail from './pages/InvoiceDetail';
+import { queryClient } from './utils/http';
+import { QueryClientProvider } from '@tanstack/react-query';
+import InvoiceForm from './components/forms/InvoiceForm';
+import EditInvoiceForm, { Loader as EditInvoiceLoader, Action as EditInvoiceAction } from './components/forms/EditInvoiceForm';
 
 // Layout component that renders the dashboard and any modal routes
 const DashboardLayout = () => {
@@ -45,7 +46,7 @@ const router = createBrowserRouter([
           },
           { 
             path: 'invoice/new',
-            element: <InvoiceForm isOpen={true} editMode={false} onClose={() => window.history.back()} />
+            element: <InvoiceForm isOpen={true} onClose={() => window.history.back()} />
           },
         ]
       },
@@ -59,9 +60,9 @@ const router = createBrowserRouter([
           },
           { 
             path: 'edit',
-            element: <InvoiceForm isOpen={true} editMode={true} onClose={() => window.history.back()} />,
-            loader: InvoiceLoader,
-            action: EditAction 
+            element: <EditInvoiceForm isOpen={true} onClose={() => window.history.back()} />,
+            loader: EditInvoiceLoader,
+            action: EditInvoiceAction
           }
         ]
       },

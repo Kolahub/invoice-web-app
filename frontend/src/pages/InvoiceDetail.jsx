@@ -1,7 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { fetchInvoiceById, deleteInvoice } from '../utils/http';
+import { fetchInvoiceById, deleteInvoice, updateInvoiceStatus } from '../utils/http';
+import { toast } from 'react-toastify';
 import DeleteConfirmationModal from '../components/ui/DeleteConfirmationModal';
 import { format } from 'date-fns';
 import IconArrowLeft from '../assets/icon-arrow-left.svg?react';
@@ -10,8 +11,7 @@ import IconArrowLeft from '../assets/icon-arrow-left.svg?react';
 function InvoiceDetail() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const queryClient = useQueryClient();
-  
-  const { mutate, isPending: isDeleting } = useMutation({
+  const { mutate: deleteInvoiceMutation, isPending: isDeleting } = useMutation({
     mutationFn: deleteInvoice,
     onSuccess: () => {
       queryClient.invalidateQueries(['invoices']);
@@ -20,23 +20,63 @@ function InvoiceDetail() {
   });
   
   const handleDelete = () => {
-    mutate({ id });
+    deleteInvoiceMutation({ id });
+  };
+
+  // Mutation for updating invoice status
+  const { mutate: updateStatus, isPending: isUpdatingStatus } = useMutation({
+    mutationFn: updateInvoiceStatus,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['invoices']);
+      queryClient.invalidateQueries(['invoice', { id }]);
+      toast.success(`Invoice marked as ${invoice.status === 'paid' ? 'unpaid' : 'paid'} successfully!`);
+    },
+    onError: (error) => {
+      console.error('Error updating invoice status:', error);
+      toast.error(error.message || 'Failed to update invoice status');
+    },
+  });
+
+  // Toggle between paid and pending status
+  const handleStatusToggle = () => {
+    const newStatus = invoice.status === 'paid' ? 'pending' : 'paid';
+    updateStatus({ id, status: newStatus });
   };
   const { id } = useParams();
   const navigate = useNavigate();
   
-  const { data: invoice, isPending } = useQuery({
+  const { data: invoice, isPending, error } = useQuery({
     queryKey: ['invoice', { id }],
     queryFn: ({ queryKey, signal }) => fetchInvoiceById({...queryKey[1], signal}),
+    // Don't retry on 404 errors
+    retry: (failureCount, error) => {
+      if (error.message.includes('404')) return false;
+      return failureCount < 3; // Retry other errors up to 3 times
+    },
   });
 
-
   if (isPending) {
-    return <div className="p-8">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pri-100"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-8 text-center">
+        <p className="text-red-500">
+          {error.message.includes('404') 
+            ? 'Invoice not found' 
+            : 'Failed to load invoice. Please try again.'}
+        </p>
+      </div>
+    );
   }
 
   if (!invoice) {
-    return <div className="p-8">Invoice not found</div>;
+    return <div className="p-8 text-center">No invoice data available</div>;
   }
 
   const formatDate = (dateString) => {
@@ -93,10 +133,16 @@ function InvoiceDetail() {
             className="cursor-pointer px-4 py-2 bg-err-100 hover:bg-err-200 text-white dark:bg-red-900/30 dark:hover:bg-red-800/50 dark:text-red-400 rounded-full font-bold"
             disabled={isDeleting}
           >
-            {isDeleting ? 'Deleting...' : 'Delete'}
+            Delete
           </button>
-          <button className="cursor-pointer px-4 py-2 bg-pri-100 hover:bg-pri-200 text-white rounded-full font-bold">
-            Mark as {invoice.status === 'paid' ? 'Unpaid' : 'Paid'}
+          <button 
+            onClick={handleStatusToggle}
+            disabled={isUpdatingStatus}
+            className="cursor-pointer px-4 py-2 bg-pri-100 hover:bg-pri-200 text-white rounded-full font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isUpdatingStatus 
+              ? 'Updating...' 
+              : `Mark as ${invoice.status === 'paid' ? 'Unpaid' : 'Paid'}`}
           </button>
         </div>
       </div>
@@ -161,8 +207,17 @@ function InvoiceDetail() {
                 <tr key={item._id} className="border-b border-gray-100 dark:border-gray-600">
                   <td className="p-4 font-bold">{item.name}</td>
                   <td className="p-4 text-center text-sec-300 font-bold dark:text-gray-400">{item.quantity}</td>
-                  <td className="p-4 text-right text-sec-300 font-bold">£ {item.price.toFixed(2)}</td>
-                  <td className="p-4 text-right font-bold">£ {item.total.toFixed(2)}</td>
+                  <td className="p-4 text-right text-sec-300 font-bold">
+                  £ {new Intl.NumberFormat('en-GB', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                  }).format(item.price)}
+                  </td>
+                  <td className="p-4 text-right font-bold">                  
+                  £ {new Intl.NumberFormat('en-GB', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                  }).format(item.total)}</td>
                 </tr>
               ))}
             </tbody>
@@ -172,7 +227,12 @@ function InvoiceDetail() {
         {/* Total */}
         <div className="bg-gray-800 text-white p-6 rounded-b-lg flex justify-between items-center">
           <span className="text-sm">Amount Due</span>
-          <span className="text-2xl font-bold">${invoice.totalAmount.toFixed(2)}</span>
+          <span className="text-2xl font-bold">
+          £ {new Intl.NumberFormat('en-GB', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+          }).format(invoice.totalAmount)}
+          </span>
         </div>
       </div>
       </div>
@@ -182,6 +242,7 @@ function InvoiceDetail() {
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleDelete}
         invoiceId={invoice?.invoiceId || ''}
+         isDeleting={isDeleting}
       />
     </>
   );
