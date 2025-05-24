@@ -63,7 +63,7 @@ function InvoicesDisplay() {
         <p className="text-sm font-medium text-sec-300">{formattedDueDate}</p>
         <p className='text-sm font-medium text-sec-300'>{invoice.billTo.clientName}</p>
         <p className='font-bold text-sec-400'>
-        £ ${new Intl.NumberFormat('en-GB', {
+        £ {new Intl.NumberFormat('en-GB', {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2
 }).format(summationItemTotal)}

@@ -16,7 +16,7 @@ export async function fetchInvoices({status, signal}) {
   
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Failed to fetch invoices');
+        throw new Error(errorData.errors.message || 'Failed to fetch invoices');
       }
   
        const { data } = await response.json();
@@ -40,7 +40,7 @@ export async function fetchInvoiceById({id, signal}) {
     if (!response.ok) {
       if (response.status === 404) return null;
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || 'Failed to fetch invoice');
+      throw new Error(errorData.errors.message || 'Failed to fetch invoice');
     }
 
     const { data } = await response.json();
@@ -67,9 +67,14 @@ export async function createInvoice(invoiceData) {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      console.log(errorData.message, '😭😭');
+      console.log('Error details:', errorData.errors);
       
-      throw new Error(errorData.message || 'Failed to create invoice');
+      // Extract error messages from the array of error objects
+      const errorMessages = Array.isArray(errorData.errors) 
+        ? errorData.errors.map(err => err.msg || err.message || JSON.stringify(err)).join(', ')
+        : 'Failed to create invoice';
+      
+      throw new Error(errorMessages);
     }
 
     return await response.json();
@@ -91,7 +96,14 @@ export async function updateInvoice({id, updateData}) {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || 'Failed to update invoice');
+      console.log('Error details:', errorData.errors);
+      
+      // Extract error messages from the array of error objects
+      const errorMessages = Array.isArray(errorData.errors) 
+        ? errorData.errors.map(err => err.msg || err.message || JSON.stringify(err)).join(', ')
+        : 'Failed to update invoice';
+      
+      throw new Error(errorMessages);
     }
 
     return await response.json();
@@ -113,7 +125,7 @@ export async function updateInvoiceStatus({ id, status }) {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || 'Failed to update invoice status');
+      throw new Error(errorData.errors.message || 'Failed to update invoice status');
     }
 
     return await response.json();
@@ -132,7 +144,7 @@ export async function deleteInvoice({id, signal}) {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || 'Failed to delete invoice');
+      throw new Error(errorData.errors.message || 'Failed to delete invoice');
     }
 
     return true;

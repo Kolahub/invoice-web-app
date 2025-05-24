@@ -12,7 +12,7 @@ function InvoiceForm({ isOpen, onClose }) {
   const navigate = useNavigate();
   
   // Mutation for creating a new invoice
-  const { mutate: createMutation, isPending: isCreating } = useMutation({
+  const { mutate: createMutation, isPending: isCreating, error: submitError } = useMutation({
     mutationFn: createInvoice,
     onSuccess: () => {
       // Invalidate the invoices query to refetch the list
@@ -23,10 +23,13 @@ function InvoiceForm({ isOpen, onClose }) {
       navigate('/');
     },
     onError: (error) => {
-      console.error('Error creating invoice:', error);
+      console.log('Error creating invoice:😭😭', error.message);
       toast.error(error.message || 'Failed to create invoice');
     }
   });
+
+  console.log('submitError', submitError);
+  
   
   // Handle form submission
   const handleSubmit = (formData) => {

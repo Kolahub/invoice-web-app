@@ -44,7 +44,6 @@ const InvoiceDetailsSection = ({
           label="Project Description"
           placeholder="Graphic Design"
           defaultValue={initialData?.projectDescription || ''}
-          required
         />
       </div>
     </FormSection>

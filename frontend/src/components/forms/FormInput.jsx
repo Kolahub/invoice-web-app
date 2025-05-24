@@ -7,7 +7,6 @@ const FormInput = ({
   type = 'text', 
   placeholder, 
   defaultValue, 
-  required = false,
   className = '',
   ...props 
 }) => {
@@ -22,7 +21,6 @@ const FormInput = ({
         name={name}
         placeholder={placeholder}
         defaultValue={defaultValue}
-        required={required}
         className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded font-medium dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
         {...props}
       />

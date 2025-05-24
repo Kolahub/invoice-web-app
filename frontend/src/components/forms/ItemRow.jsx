@@ -13,7 +13,6 @@ const ItemRow = ({ item, index, updateItem, removeItem, canRemove }) => {
           name={`itemName${index}`}
           defaultValue={item.name}
           className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded font-medium dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
-          required
         />
       </div>
       
@@ -28,7 +27,6 @@ const ItemRow = ({ item, index, updateItem, removeItem, canRemove }) => {
           value={item.quantity}
           onChange={(e) => updateItem(item.id, 'quantity', e.target.value)}
           className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded font-medium dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-purple-500 focus:border-purple-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-          required
         />
       </div>
       
@@ -44,7 +42,6 @@ const ItemRow = ({ item, index, updateItem, removeItem, canRemove }) => {
           value={item.price}
           onChange={(e) => updateItem(item.id, 'price', e.target.value)}
           className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded font-medium dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-purple-500 focus:border-purple-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-          required
         />
       </div>
       

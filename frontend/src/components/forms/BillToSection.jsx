@@ -12,7 +12,6 @@ const BillToSection = ({ initialData }) => {
           label="Client's Name"
           placeholder="Alex Grim"
           defaultValue={initialData?.billTo?.clientName || ''}
-          required
         />
         
         <FormInput
@@ -22,7 +21,6 @@ const BillToSection = ({ initialData }) => {
           type="email"
           placeholder="alexgrim@mail.com"
           defaultValue={initialData?.billTo?.clientEmail || ''}
-          required
         />
         
         <FormInput
@@ -31,7 +29,6 @@ const BillToSection = ({ initialData }) => {
           label="Street Address"
           placeholder="84 Church Way"
           defaultValue={initialData?.billTo?.street || ''}
-          required
         />
         
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -41,7 +38,6 @@ const BillToSection = ({ initialData }) => {
             label="City"
             placeholder="Bradford"
             defaultValue={initialData?.billTo?.city || ''}
-            required
           />
           
           <FormInput
@@ -50,7 +46,6 @@ const BillToSection = ({ initialData }) => {
             label="Post Code"
             placeholder="BD1 9PB"
             defaultValue={initialData?.billTo?.postCode || ''}
-            required
           />
           
           <div className="md:col-span-1">
@@ -60,7 +55,6 @@ const BillToSection = ({ initialData }) => {
               label="Country"
               placeholder="United Kingdom"
               defaultValue={initialData?.billTo?.country || ''}
-              required
             />
           </div>
         </div>

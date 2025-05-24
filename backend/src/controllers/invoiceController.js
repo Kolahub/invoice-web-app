@@ -32,14 +32,14 @@ export const getAllInvoices = async (req, res) => {
       data: invoices,
     });
   } catch (error) {
-    next(error);
+    d(error);
   }
 };
 
 // @desc    Get single invoice
 // @route   GET /api/invoices/:id
 // @access  Public
-export const getInvoice = async (req, res, next) => {
+export const getInvoice = async (req, res, d) => {
   try {
     const invoice = await Invoice.findById(req.params.id);
     
@@ -55,14 +55,14 @@ export const getInvoice = async (req, res, next) => {
       data: invoice,
     });
   } catch (error) {
-    next(error);
+    d(error);
   }
 };
 
 // @desc    Create new invoice
 // @route   POST /api/invoices
 // @access  Public
-export const createInvoice = async (req, res, next) => {
+export const createInvoice = async (req, res, d) => {
   try {
     // If status is not provided, default to 'pending'
     if (!req.body.status) {
@@ -83,14 +83,14 @@ export const createInvoice = async (req, res, next) => {
       data: invoice,
     });
   } catch (error) {
-    next(error);
+    d(error);
   }
 };
 
 // @desc    Update invoice
 // @route   PUT /api/invoices/:id
 // @access  Public
-export const updateInvoice = async (req, res, next) => {
+export const updateInvoice = async (req, res, d) => {
   try {
     let invoice = await Invoice.findById(req.params.id);
     
@@ -116,14 +116,14 @@ export const updateInvoice = async (req, res, next) => {
       data: invoice,
     });
   } catch (error) {
-    next(error);
+    d(error);
   }
 };
 
 // @desc    Delete invoice
 // @route   DELETE /api/invoices/:id
 // @access  Public
-export const deleteInvoice = async (req, res, next) => {
+export const deleteInvoice = async (req, res, d) => {
   try {
     const invoice = await Invoice.findById(req.params.id);
     
@@ -142,14 +142,14 @@ export const deleteInvoice = async (req, res, next) => {
       data: {},
     });
   } catch (error) {
-    next(error);
+    d(error);
   }
 };
 
 // @desc    Update invoice status
 // @route   PATCH /api/invoices/:id/status
 // @access  Public
-export const updateInvoiceStatus = async (req, res, next) => {
+export const updateInvoiceStatus = async (req, res, d) => {
   try {
     const { status } = req.body;
     
@@ -178,6 +178,6 @@ export const updateInvoiceStatus = async (req, res, next) => {
       data: invoice,
     });
   } catch (error) {
-    next(error);
+    d(error);
   }
 };

@@ -12,7 +12,6 @@ const BillFromSection = ({ initialData }) => {
           label="Street Address"
           placeholder="19 Union Terrace"
           defaultValue={initialData?.billFrom?.street || ''}
-          required
         />
         
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -22,7 +21,6 @@ const BillFromSection = ({ initialData }) => {
             label="City"
             placeholder="London"
             defaultValue={initialData?.billFrom?.city || ''}
-            required
           />
           
           <FormInput
@@ -31,7 +29,6 @@ const BillFromSection = ({ initialData }) => {
             label="Post Code"
             placeholder="E1 3EZ"
             defaultValue={initialData?.billFrom?.postCode || ''}
-            required
           />
           
           <div className="md:col-span-1">
@@ -41,7 +38,7 @@ const BillFromSection = ({ initialData }) => {
               label="Country"
               placeholder="United Kingdom"
               defaultValue={initialData?.billFrom?.country || ''}
-              required
+
             />
           </div>
         </div>
