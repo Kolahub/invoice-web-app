@@ -1,6 +1,22 @@
 import { body, param, validationResult } from 'express-validator';
 import { StatusCodes } from 'http-status-codes';
 
+// Helper function to convert field path to camelCase
+const formatFieldName = (fieldPath) => {
+  // Handle undefined, null, or non-string values
+  if (!fieldPath || typeof fieldPath !== 'string') {
+    return 'unknown';
+  }
+  
+  return fieldPath
+    .split('.')
+    .map((part, index) => {
+      if (index === 0) return part;
+      return part.charAt(0).toUpperCase() + part.slice(1);
+    })
+    .join('');
+};
+
 // Validation middleware for creating/updating an invoice
 export const validateInvoice = [
   // Bill From validation
@@ -50,10 +66,16 @@ export const validateInvoice = [
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      const errorMessages = errors.array().map((error) => ({
-        field: error.param,
-        message: error.msg,
-      }));
+      const errorMessages = errors.array().map((error) => {
+        // Safely get the field name, fallback to 'unknown' if param is missing
+        const fieldParam = error.param || error.path || 'unknown';
+        const formattedFieldName = formatFieldName(fieldParam);
+        
+        return {
+          field: formattedFieldName,
+          [formattedFieldName]: error.msg || 'Validation error',
+        };
+      });
       
       return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
@@ -78,8 +100,8 @@ export const validateId = [
         success: false,
         message: 'Validation failed',
         errors: errors.array().map(err => ({
-          param: err.param,
-          message: err.msg
+          field: err.param,
+          [err.param]: err.msg
         })),
       });
     }

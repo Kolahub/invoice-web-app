@@ -12,13 +12,14 @@ function NewInvoiceBtn() {
   return (
     <button 
       onClick={handleClick}
-      className='cursor-pointer w-40 h-12 group bg-pri-100 hover:bg-pri-200 active:scale-95 flex items-center gap-4 rounded-full transition-colors'
+      className='cursor-pointer w-[90px] sm:w-40 h-12 group bg-pri-100 hover:bg-pri-200 active:scale-95 flex items-center gap-2 sm:gap-4 rounded-full transition-colors'
       aria-label="Create new invoice"
     >
       <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-pri-100 group-hover:text-pri-200 transition-colors ml-2">
         <IconPlus />
       </div>
-      <span className='font-bold text-white text-sm'>New Invoice</span>
+      <span className='font-bold text-center text-white text-sm sm:hidden'>New</span>
+      <span className='font-bold text-white text-sm hidden sm:block'>New Invoice</span>
     </button>
   );
 }

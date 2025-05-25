@@ -24,21 +24,21 @@ function Navbar() {
   };
 
   return (
-    <div className='bg-pri-400 lg:w-[103px] fixed lg:top-0 lg:bottom-0 rounded-tr-4xl flex lg:flex-col justify-between z-60'>
-      <div className="relative w-full">
-      <div className="bg-pri-100 w-full h-[103px] rounded-tr-4xl rounded-br-4xl"></div>
-      <div className="bg-pri-200 w-full h-[51.5px] rounded-tl-4xl rounded-br-4xl absolute top-1/2"></div>
+    <div className='bg-pri-400 lg:w-[103px] fixed top-0 h-20 lg:h-auto lg:bottom-0 left-0 lg:left-auto right-0 lg:right-auto lg:rounded-tr-3xl flex lg:flex-col justify-between z-60'>
+      <div className="relative w-20 h-20 lg:w-full lg:h-auto">
+      <div className="bg-pri-100 w-full h-20 lg:h-[103px] rounded-tr-xl rounded-br-xl lg:rounded-tr-3xl lg:rounded-br-3xl"></div>
+      <div className="bg-pri-200 w-full h-10 lg:h-[51.5px] rounded-tr-xl rounded-br-xl lg:rounded-tl-3xl lg:rounded-br-3xl absolute top-1/2"></div>
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white">
         <Logo />
       </div>
       </div>
 
-      <div className="flex lg:flex-col justify-between items-center lg:pb-6 lg:h-[140px]">
+      <div className="flex lg:flex-col justify-between items-center w-36 lg:w-full pr-6 lg:pr-0 lg:pb-6 lg:h-[140px]">
         <button className="">
           <IconMoon />
         </button> 
 
-        <div className="w-full h-0.5 bg-sec-200"></div>
+        <div className="w-0.5 lg:w-full h-full lg:h-0.5 bg-sec-200"></div>
          
         <div className="relative h-12 w-12">
           <input

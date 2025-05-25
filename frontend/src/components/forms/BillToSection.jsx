@@ -2,7 +2,7 @@ import React from 'react';
 import FormInput from './FormInput';
 import FormSection from './FormSection';
 
-const BillToSection = ({ initialData }) => {
+const BillToSection = ({ initialData, errors = {} }) => {
   return (
     <FormSection title="Bill To" className="mb-10">
       <div className="space-y-4">
@@ -12,6 +12,7 @@ const BillToSection = ({ initialData }) => {
           label="Client's Name"
           placeholder="Alex Grim"
           defaultValue={initialData?.billTo?.clientName || ''}
+          error={errors.clientName}
         />
         
         <FormInput
@@ -21,6 +22,7 @@ const BillToSection = ({ initialData }) => {
           type="email"
           placeholder="alexgrim@mail.com"
           defaultValue={initialData?.billTo?.clientEmail || ''}
+          error={errors.clientEmail}
         />
         
         <FormInput
@@ -29,6 +31,7 @@ const BillToSection = ({ initialData }) => {
           label="Street Address"
           placeholder="84 Church Way"
           defaultValue={initialData?.billTo?.street || ''}
+          error={errors.clientStreetAddress}
         />
         
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -38,6 +41,7 @@ const BillToSection = ({ initialData }) => {
             label="City"
             placeholder="Bradford"
             defaultValue={initialData?.billTo?.city || ''}
+            error={errors.clientCity}
           />
           
           <FormInput
@@ -46,6 +50,7 @@ const BillToSection = ({ initialData }) => {
             label="Post Code"
             placeholder="BD1 9PB"
             defaultValue={initialData?.billTo?.postCode || ''}
+            error={errors.clientPostCode}
           />
           
           <div className="md:col-span-1">
@@ -55,6 +60,7 @@ const BillToSection = ({ initialData }) => {
               label="Country"
               placeholder="United Kingdom"
               defaultValue={initialData?.billTo?.country || ''}
+              error={errors.clientCountry}
             />
           </div>
         </div>

@@ -58,8 +58,9 @@ function FilterItem() {
 
   return (
     <div className='relative'>
-        <button className="flex items-center gap-3.5 cursor-pointer" onClick={handleToggleFilterAction}>
-        <p className='font-bold'>Filter by status</p>
+        <button className="flex items-center gap-2 sm:gap-3.5 cursor-pointer" onClick={handleToggleFilterAction}>
+        <p className='font-bold sm:hidden'>Filter</p>
+        <p className='font-bold hidden sm:block'>Filter by status</p>
         <div className={`${isFilterOpen ? 'rotate-180' : ''}`}>
             <IconArrowDown />
         </div>
@@ -73,7 +74,7 @@ function FilterItem() {
                 initial="closed"
                 animate="open"
                 exit="closed"
-                className="absolute -left-10 top-8 bg-white p-6 w-56 rounded-lg shadow-lg flex flex-col gap-4 z-50">
+                className="absolute -left-16 sm:-left-12 top-8 bg-white p-6 w-56 rounded-lg shadow-lg flex flex-col gap-4 z-50">
                 {['draft', 'pending', 'paid'].map((item) => (
                     <li key={item} className='list-none' onClick={() => handleFilterAction(item)}> 
                         <button className='cursor-pointer flex items-center gap-3.5 group w-full text-left'>

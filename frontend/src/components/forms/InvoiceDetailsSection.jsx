@@ -9,7 +9,8 @@ const InvoiceDetailsSection = ({
   invoiceDate, 
   setInvoiceDate, 
   paymentTerms, 
-  setPaymentTerms 
+  setPaymentTerms,
+  errors = {}
 }) => {
   return (
     <FormSection className="mb-10">
@@ -44,6 +45,7 @@ const InvoiceDetailsSection = ({
           label="Project Description"
           placeholder="Graphic Design"
           defaultValue={initialData?.projectDescription || ''}
+          error={errors.projectDescription}
         />
       </div>
     </FormSection>

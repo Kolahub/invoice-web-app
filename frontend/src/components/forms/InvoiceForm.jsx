@@ -12,7 +12,7 @@ function InvoiceForm({ isOpen, onClose }) {
   const navigate = useNavigate();
   
   // Mutation for creating a new invoice
-  const { mutate: createMutation, isPending: isCreating, error: submitError } = useMutation({
+  const { mutate: createMutation, isPending: isCreating, error: submitError, reset } = useMutation({
     mutationFn: createInvoice,
     onSuccess: () => {
       // Invalidate the invoices query to refetch the list
@@ -25,11 +25,17 @@ function InvoiceForm({ isOpen, onClose }) {
     onError: (error) => {
       console.log('Error creating invoice:😭😭', error.message);
       toast.error(error.message || 'Failed to create invoice');
+      // Clear error after 5 seconds
+      const timer = setTimeout(() => {
+        reset();
+      }, 5000);
+      
+      // Clean up the timer if the component unmounts
+      return () => clearTimeout(timer);
     }
   });
 
   console.log('submitError', submitError);
-  
   
   // Handle form submission
   const handleSubmit = (formData) => {
@@ -123,13 +129,14 @@ function InvoiceForm({ isOpen, onClose }) {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="fixed inset-y-0 left-0 w-full md:w-[38rem] bg-white dark:bg-gray-800 shadow-2xl z-50 overflow-y-auto pl-[120px]"
+            className="fixed inset-y-0 left-0 top-20 lg:top-0 w-full md:w-[38rem] bg-white dark:bg-gray-800 shadow-2xl z-50 overflow-y-auto lg:pl-[120px]"
             onClick={(e) => e.stopPropagation()}
           >
-            <CreateInvoiceForm
-              onCancel={onClose}
-              onSubmit={handleSubmit}
+            <CreateInvoiceForm 
+              onCancel={onClose} 
+              onSubmit={handleSubmit} 
               isLoading={isCreating}
+              submitError={submitError}
             />
           </Motion.div>
         </>

@@ -5,8 +5,24 @@ import BillToSection from './BillToSection';
 import InvoiceDetailsSection from './InvoiceDetailsSection';
 import ItemListSection from './ItemListSection';
 import FormActions from './FormActions';
+import { useNavigate } from 'react-router-dom';
+import IconArrowLeft from '../../assets/icon-arrow-left.svg?react';
 
-const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData, isEditMode = false }) => {
+const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData, isEditMode = false, submitError }) => {
+  const navigate = useNavigate()
+  // Convert array of errors to an object for easier access
+  const errors = React.useMemo(() => {
+    if (!submitError || !Array.isArray(submitError)) return {};
+    return submitError.reduce((acc, error) => {
+      const fieldName = Object.keys(error).find(key => key !== 'field');
+      if (fieldName) {
+        acc[fieldName] = error[fieldName];
+      }
+      return acc;
+    }, {});
+  }, [submitError]);
+  console.log(errors);
+  
   const [items, setItems] = useState(
     initialData?.items?.length > 0 
       ? initialData.items.map(item => ({
@@ -16,7 +32,7 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
           price: parseFloat(item.price) || 0,
           total: parseFloat((item.quantity * item.price).toFixed(2)) || 0
         }))
-      : [{ id: Date.now(), name: '', quantity: 1, price: 0, total: 0 }]
+      : [{ id: Date.now(), name: '', quantity: 0, price: 0, total: 0 }]
   );
   
   const [paymentTerms, setPaymentTerms] = useState(initialData?.paymentTerms || 30);
@@ -114,7 +130,7 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
     setItems(prevItems => [...prevItems, { 
       id: Date.now() + Math.random(), 
       name: '', 
-      quantity: 1, 
+      quantity: 0, 
       price: 0,
       total: 0 
     }]);
@@ -127,9 +143,19 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
   };
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col custom-scrollbar">
       <div className="flex-1 overflow-y-auto">
         <form id="invoice-form" onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 rounded-r-2xl p-6 md:p-8">
+        <button 
+                type="button"
+                onClick={() => navigate('..')}
+                className="cursor-pointer group flex items-center gap-6 font-bold mb-6 md:hidden"
+              >
+                <div className="text-pri-100 group-hover:text-pri-200">
+                  <IconArrowLeft />
+                </div>
+                <p className='group-hover:text-sec-300'>Go back</p>
+              </button>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
             {isEditMode ? (
               <>
@@ -139,9 +165,28 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
             ) : 'New Invoice'}
           </h2>
       
-          <BillFromSection initialData={initialData} />
+          <BillFromSection 
+            initialData={initialData}
+            errors={{
+              streetAddress: errors.billFromStreet,
+              city: errors.billFromCity,
+              postCode: errors.billFromPostCode,
+              country: errors.billFromCountry
+            }}
+          />
           
-          <BillToSection initialData={initialData} />
+          <BillToSection 
+            initialData={initialData}
+            errors={{
+              clientName: errors.billToClientName,
+              clientEmail: errors.billToClientEmail,
+              clientStreetAddress: errors.billToStreet,
+              clientCity: errors.billToCity,
+              clientPostCode: errors.billToPostCode,
+              clientCountry: errors.billToCountry,
+              projectDescription: errors.projectDescription
+            }}
+          />
           
           <InvoiceDetailsSection 
             initialData={initialData}
@@ -149,6 +194,7 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
             setInvoiceDate={setInvoiceDate}
             paymentTerms={paymentTerms}
             setPaymentTerms={setPaymentTerms}
+            errors={errors}
           />
           
           <ItemListSection 
@@ -156,6 +202,7 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
             updateItem={updateItem}
             removeItem={removeItem}
             addNewItem={addNewItem}
+            errors={errors}
           />
         </form>
       </div>

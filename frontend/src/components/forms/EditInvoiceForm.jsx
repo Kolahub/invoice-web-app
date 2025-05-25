@@ -1,7 +1,7 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { motion as Motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
-import { useParams, useSubmit, useNavigation, redirect } from 'react-router-dom';
+import { useParams, useSubmit, useNavigation, redirect, useActionData } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import CreateInvoiceForm from './CreateInvoiceForm';
 import { fetchInvoiceById, updateInvoice, queryClient } from '../../utils/http';
@@ -12,7 +12,11 @@ function EditInvoiceForm({ isOpen, onClose }) {
   const submit = useSubmit();
   const { id } = useParams();
   const { state } = useNavigation();
+  const actionData = useActionData();
   const isUpdating = state === 'submitting';
+
+  // Local state to manage error display
+  const [displayError, setDisplayError] = useState(null);
 
   // Fetch invoice data
   const { data: invoiceData, isLoading, error } = useQuery({
@@ -21,8 +25,24 @@ function EditInvoiceForm({ isOpen, onClose }) {
     enabled: isOpen && !!id,
   });
 
+  // Handle actionData error with auto-clear after 5 seconds
+  useEffect(() => {
+    if (actionData?.error) {
+      setDisplayError(actionData.error);
+      
+      const timer = setTimeout(() => {
+        setDisplayError(null);
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [actionData?.error]);
+
   // Handle form submission
   const handleSubmit = (formData) => {
+    // Clear any existing error when submitting
+    setDisplayError(null);
+    
     // Preserve the existing status if not provided in formData
     const status = formData.status || (invoiceData ? invoiceData.status : 'pending');
     const processedData = processInvoiceFormData(formData, status);
@@ -136,7 +156,7 @@ function EditInvoiceForm({ isOpen, onClose }) {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="fixed inset-y-0 left-0 w-full md:w-[38rem] bg-white dark:bg-gray-800 shadow-2xl z-50 overflow-y-auto pl-[120px]"
+            className="fixed inset-y-0 left-0 top-20 lg:top-0 w-full md:w-[38rem] bg-white dark:bg-gray-800 shadow-2xl z-50 overflow-y-auto lg:pl-[120px]"
             onClick={(e) => e.stopPropagation()}
           >
             {invoiceData && (
@@ -146,6 +166,7 @@ function EditInvoiceForm({ isOpen, onClose }) {
                 onCancel={onClose}
                 onSubmit={handleSubmit}
                 isLoading={isUpdating}
+                submitError={displayError} // Use displayError instead of actionData?.error
               />
             )}
           </Motion.div>
@@ -194,9 +215,10 @@ async function Action({ request, params }) {
     toast.success('Invoice updated successfully!');
     return redirect('..');
   } catch (error) {
-    console.error(error);
-    toast.error('Failed to update invoice');
-    throw error;
+    console.error('Update invoice error:', error);
+    return {
+      error
+    };
   }
 }
 
