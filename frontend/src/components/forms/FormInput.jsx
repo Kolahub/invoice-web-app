@@ -13,7 +13,7 @@ const FormInput = ({
 }) => {
   return (
     <div className={className}>
-      <label htmlFor={id} className="block text-sm font-medium text-sec-300 dark:text-sec-200 mb-2">
+      <label htmlFor={id} className="block text-sm font-medium text-sec-300 dark:text-sec-100 mb-2">
         {label}
       </label>
       <div className="relative">
@@ -23,11 +23,19 @@ const FormInput = ({
           name={name}
           placeholder={placeholder}
           defaultValue={defaultValue}
-          className={`w-full p-3 border rounded font-medium dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-pri-100 focus:border-pri-100 focus:outline-none caret-pri-200 placeholder:text-sec-300/60 ${
-            error 
-              ? 'border-red-500 focus:ring-red-500 focus:border-red-500' 
-              : 'border-gray-300 dark:border-gray-600'
-          }`}
+          className={`w-full p-3 border rounded font-bold 
+            bg-white dark:bg-pri-300 
+            text-sec-400 dark:text-white 
+            border-sec-100 dark:border-pri-400 
+            focus:ring-1 focus:ring-pri-100 focus:border-pri-100 
+            focus:outline-none 
+            caret-pri-200 
+            placeholder-sec-300/60 dark:placeholder-sec-200/60
+            transition-colors duration-200
+            ${error 
+              ? 'border-err-100 focus:ring-err-100 focus:border-err-100' 
+              : 'hover:border-pri-100 dark:hover:border-pri-200'
+            }`}
           aria-invalid={!!error}
           aria-describedby={`${id}-error`}
           {...props}
@@ -35,7 +43,7 @@ const FormInput = ({
         {error && (
           <p 
             id={`${id}-error`} 
-            className="mt-1 text-sm text-red-600 dark:text-red-400"
+            className="mt-1 text-sm text-err-100 dark:text-err-200"
           >
             {error}
           </p>

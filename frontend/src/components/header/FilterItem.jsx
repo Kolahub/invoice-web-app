@@ -59,9 +59,9 @@ function FilterItem() {
   return (
     <div className='relative'>
         <button className="flex items-center gap-2 sm:gap-3.5 cursor-pointer" onClick={handleToggleFilterAction}>
-        <p className='font-bold sm:hidden'>Filter</p>
-        <p className='font-bold hidden sm:block'>Filter by status</p>
-        <div className={`${isFilterOpen ? 'rotate-180' : ''}`}>
+        <p className='font-bold sm:hidden dark:text-white'>Filter</p>
+        <p className='font-bold hidden sm:block dark:text-white'>Filter by status</p>
+        <div className={`text-pri-100 ${isFilterOpen ? 'rotate-180' : ''}`}>
             <IconArrowDown />
         </div>
     </button>
@@ -74,14 +74,14 @@ function FilterItem() {
                 initial="closed"
                 animate="open"
                 exit="closed"
-                className="absolute -left-16 sm:-left-12 top-8 bg-white p-6 w-56 rounded-lg shadow-lg flex flex-col gap-4 z-50">
+                className="absolute -left-16 sm:-left-12 top-8 bg-white dark:bg-pri-400 p-6 w-56 rounded-lg shadow-lg flex flex-col gap-4 z-50">
                 {['draft', 'pending', 'paid'].map((item) => (
                     <li key={item} className='list-none' onClick={() => handleFilterAction(item)}> 
                         <button className='cursor-pointer flex items-center gap-3.5 group w-full text-left'>
-                            <div className={`w-4 h-4 rounded-sm border-2 border-pri-100 flex items-center justify-center ${item === activeStatus ? 'bg-pri-100' : ''}`}>
+                            <div className={`w-4 h-4 rounded-sm border-2 border-pri-100 flex items-center justify-center ${item === activeStatus ? 'bg-pri-100' : 'dark:bg-pri-300'}`}>
                                 {item === activeStatus && <IconCheck className="text-white" />}
                             </div>
-                            <p className='font-bold capitalize'>{item}</p>
+                            <p className='font-bold capitalize dark:text-white'>{item}</p>
                         </button>
                     </li>
                 ))}

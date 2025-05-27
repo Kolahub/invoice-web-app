@@ -41,7 +41,7 @@ const PaymentTermsDropdown = ({ value, onChange, className = '' }) => {
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
       <Motion.div 
-        className="group w-full p-3 border border-gray-300 dark:border-gray-600 rounded font-medium dark:bg-gray-700 dark:text-white cursor-pointer flex justify-between items-center"
+        className="group w-full p-3 border border-sec-100 dark:border-pri-400 rounded font-bold dark:bg-pri-300 text-sec-400 dark:text-white cursor-pointer flex justify-between items-center hover:border-pri-100 dark:hover:border-pri-200 transition-colors duration-200"
         onClick={toggleDropdown}
         whileTap={{ scale: 0.98 }}
       >
@@ -51,14 +51,14 @@ const PaymentTermsDropdown = ({ value, onChange, className = '' }) => {
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.2 }}
         >
-          <IconArrowDown />
+          <IconArrowDown className="fill-current" />
         </Motion.span>
       </Motion.div>
       
       <AnimatePresence>
         {isOpen && (
           <Motion.div 
-            className="absolute z-10 mt-1 w-full bg-white dark:bg-gray-700 rounded-lg shadow-lg py-2 border border-gray-200 dark:border-gray-600"
+            className="absolute z-10 mt-1 w-full bg-white dark:bg-pri-300 rounded-lg shadow-lg py-4 border border-sec-100 dark:border-pri-400"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
@@ -67,8 +67,10 @@ const PaymentTermsDropdown = ({ value, onChange, className = '' }) => {
           {paymentTerms.map((term, index) => (
             <Motion.div
               key={term.value}
-              className={`px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 font-extrabold ${
-                value === term.value ? 'text-pri-100' : 'text-gray-800 dark:text-gray-200'
+              className={`px-6 py-2 cursor-pointer font-bold transition-colors duration-200 ${
+                value === term.value 
+                  ? 'text-pri-100' 
+                  : 'text-sec-400 dark:text-white hover:bg-sec-100 dark:hover:bg-pri-400'
               }`}
               onClick={() => handleSelect(term)}
               initial={{ opacity: 0, y: -5 }}

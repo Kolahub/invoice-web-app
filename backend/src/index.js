@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 
 // Import routes
 import invoiceRoutes from './routes/invoiceRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 // Import database connection
 import { connectDB } from './config/db.js';
@@ -29,6 +30,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // API Routes
 app.use('/api/invoices', invoiceRoutes);
+app.use('/api/user', userRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

@@ -25,7 +25,9 @@ const ItemListSection = ({ items, updateItem, removeItem, addNewItem, errors = {
         <button
           type="button"
           onClick={addNewItem}
-          className="cursor-pointer w-full py-3 bg-bg-100 dark:bg-gray-800 text-sec-300 dark:text-sec-200 font-bold rounded-full hover:bg-sec-100 dark:hover:bg-gray-700 transition-colors mt-4"
+          className="w-full py-3 bg-bg-100 dark:bg-pri-400 text-sec-300 dark:text-sec-200 font-bold rounded-full 
+                   hover:bg-sec-100 dark:hover:bg-pri-300 
+                   transition-colors duration-200 mt-4"
         >
           + Add New Item
         </button>

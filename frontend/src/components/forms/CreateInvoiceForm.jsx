@@ -145,25 +145,29 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
   return (
     <div className="h-full flex flex-col custom-scrollbar">
       <div className="flex-1 overflow-y-auto">
-        <form id="invoice-form" onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 rounded-r-2xl p-6 md:p-8">
+        <form 
+          id="invoice-form" 
+          onSubmit={handleSubmit} 
+          className="bg-white dark:bg-bg-200 rounded-r-2xl p-6 md:p-8 shadow-[0px_10px_10px_-10px_rgba(72,84,159,0.1)] dark:shadow-[0px_10px_10px_-10px_rgba(0,0,0,0.25)]"
+        >
         <button 
-                type="button"
-                onClick={() => navigate('..')}
-                className="cursor-pointer group flex items-center gap-6 font-bold mb-6 md:hidden"
-              >
-                <div className="text-pri-100 group-hover:text-pri-200">
-                  <IconArrowLeft />
-                </div>
-                <p className='group-hover:text-sec-300'>Go back</p>
-              </button>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-            {isEditMode ? (
-              <>
-                Edit <span className="text-sec-300">{initialData.invoiceId[0]}</span>
-                {initialData.invoiceId.slice(1)}
-              </>
-            ) : 'New Invoice'}
-          </h2>
+          type="button"
+          onClick={() => navigate('..')}
+          className="cursor-pointer group flex items-center gap-6 font-bold mb-6 md:hidden text-sec-400 dark:text-sec-200"
+        >
+          <div className="text-pri-100 group-hover:text-pri-200 transition-colors">
+            <IconArrowLeft />
+          </div>
+          <span className="group-hover:text-sec-300 transition-colors">Go back</span>
+        </button>
+        <h2 className="text-2xl font-bold text-sec-400 dark:text-white mb-6">
+          {isEditMode ? (
+            <>
+              Edit <span className="text-sec-300 dark:text-sec-200">{initialData.invoiceId[0]}</span>
+              {initialData.invoiceId.slice(1)}
+            </>
+          ) : 'New Invoice'}
+        </h2>
       
           <BillFromSection 
             initialData={initialData}

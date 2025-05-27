@@ -8,7 +8,7 @@ const FormActions = ({ isEditMode, isLoading, onCancel }) => {
           <button 
             type="button"
             onClick={onCancel}
-            className="cursor-pointer px-4 sm:px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-300 font-bold rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors text-sm sm:text-base"
+            className="cursor-pointer px-4 sm:px-6 py-3 bg-gray-100 text-gray-500 font-bold rounded-full hover:bg-gray-200 transition-colors text-sm sm:text-base"
           >
             Discard
           </button>
@@ -20,7 +20,7 @@ const FormActions = ({ isEditMode, isLoading, onCancel }) => {
               <button 
                 type="button"
                 onClick={onCancel}
-                className="cursor-pointer px-4 sm:px-6 py-3 bg-bg-100 dark:bg-gray-700 text-sec-300 dark:text-gray-300 font-bold rounded-full hover:bg-sec-100 dark:hover:bg-gray-600 transition-colors text-sm sm:text-base"
+                className="cursor-pointer px-4 sm:px-6 py-3 bg-bg-100 dark:bg-pri-400 text-sec-300 dark:hover:text-sec-100 font-bold rounded-full hover:bg-sec-100 dark:hover:bg-pri-400 transition-colors text-sm sm:text-base"
               >
                 Cancel
               </button>
@@ -42,7 +42,7 @@ const FormActions = ({ isEditMode, isLoading, onCancel }) => {
                 form="invoice-form"
                 name="status"
                 value="draft"
-                className="cursor-pointer px-4 py-3 bg-gray-800 text-white font-bold rounded-full hover:bg-gray-700 transition-colors text-sm sm:text-base"
+                className="cursor-pointer px-4 py-3 bg-gray-800 dark:bg-[#373B53] dark:hover:bg-pri-300 text-white font-bold rounded-full hover:bg-gray-700 transition-colors text-sm sm:text-base"
                 disabled={isLoading}
               >
                 {isLoading ? 'Saving...' : 'Save as Draft'}
@@ -52,7 +52,7 @@ const FormActions = ({ isEditMode, isLoading, onCancel }) => {
                 form="invoice-form"
                 name="status"
                 value="pending"
-                className="cursor-pointer px-4 py-3 bg-pri-100 text-white font-bold rounded-full hover:bg-purple-500 transition-colors text-sm sm:text-base"
+                className="cursor-pointer px-4 py-3 bg-pri-100 text-white font-bold rounded-full hover:bg-pri-200 transition-colors text-sm sm:text-base"
                 disabled={isLoading}
               >
                 {isLoading ? 'Saving...' : 'Save & Send'}

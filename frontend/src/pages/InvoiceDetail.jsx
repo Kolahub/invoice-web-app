@@ -99,18 +99,18 @@ function InvoiceDetail() {
         <div className="text-pri-100 group-hover:text-pri-200">
           <IconArrowLeft />
         </div>
-        <p className='group-hover:text-sec-300'>Go back</p>
+        <p className='group-hover:text-sec-300 dark:text-white dark:group-hover:text-sec-200'>Go back</p>
       </button>
 
       {/* Status Bar */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6 sm:flex sm:items-center sm:justify-between">
+      <div className="bg-white dark:bg-pri-300 rounded-lg shadow-sm p-6 mb-6 sm:flex sm:items-center sm:justify-between">
         <div className="flex justify-between items-center sm:gap-5">
-          <span className="text-sec-300 dark:text-gray-400 text-sm md:text-base">Status</span>
+          <span className="text-sec-300 dark:text-sec-100 text-sm">Status</span>
           <div className={`px-4 py-2.5 rounded-md flex items-center font-bold ${
             invoice.status === 'draft' 
-              ? 'bg-gray-100 text-gray-950 dark:bg-gray-900/30 dark:text-gray-400'
-              : invoice.status === 'pending' ? 'bg-orange-100 text-orange-400 dark:bg-orange-900/30 dark:text-orange-400'
-              : 'bg-green-100 text-green-400 dark:bg-green-900/30 dark:text-green-400' 
+              ? 'bg-gray-950/20 text-gray-950 dark:bg-sec-200 dark:text-sec-200'
+              : invoice.status === 'pending' ? 'bg-orange-400/20 text-orange-400'
+              : 'bg-green-400/20 text-green-400' 
           }`}>
             <span className={`w-2 h-2 rounded-full mr-2 ${
               invoice.status === 'draft' ? 'bg-gray-950' : invoice.status ==='pending' ? 'bg-orange-400' : 'bg-green-400'
@@ -123,13 +123,13 @@ function InvoiceDetail() {
         <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 p-6 flex justify-between sm:hidden">
           <button 
             onClick={() => navigate('edit')}
-            className="cursor-pointer flex-1 max-w-[73px] h-12 bg-bg-100 hover:bg-sec-100 text-sec-300 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-full font-bold"
+            className="cursor-pointer flex-1 max-w-[73px] h-12 bg-bg-100 hover:bg-sec-100 text-sec-300 rounded-full font-bold"
           >
             Edit
           </button>
           <button 
             onClick={() => setIsDeleteModalOpen(true)}
-            className="cursor-pointer flex-1 max-w-[89px] h-12 bg-err-100 hover:bg-err-200 text-white dark:bg-red-900/30 dark:hover:bg-red-800/50 dark:text-red-400 rounded-full font-bold ml-2"
+            className="cursor-pointer flex-1 max-w-[89px] h-12 bg-err-100 hover:bg-err-200 text-white rounded-full font-bold ml-2"
             disabled={isDeleting}
           >
             Delete
@@ -149,13 +149,13 @@ function InvoiceDetail() {
         <div className="hidden sm:flex items-center gap-3">
           <button 
             onClick={() => navigate('edit')}
-            className="cursor-pointer px-4 py-2 bg-bg-100 hover:bg-sec-100 text-sec-300 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-full font-bold"
+            className="cursor-pointer px-4 py-2 bg-bg-100 hover:bg-sec-100 text-sec-300 rounded-full font-bold"
           >
             Edit
           </button>
           <button 
             onClick={() => setIsDeleteModalOpen(true)}
-            className="cursor-pointer px-4 py-2 bg-err-100 hover:bg-err-200 text-white dark:bg-red-900/30 dark:hover:bg-red-800/50 dark:text-red-400 rounded-full font-bold text-sm"
+            className="cursor-pointer px-4 py-2 bg-err-100 hover:bg-err-200 text-white rounded-full font-bold text-sm"
             disabled={isDeleting}
           >
             Delete
@@ -173,16 +173,16 @@ function InvoiceDetail() {
       </div>
 
       {/* Invoice Details */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 md:p-8">
+      <div className="bg-white dark:bg-pri-300 rounded-lg shadow-sm p-6 md:p-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           <div>
-            <h1 className="text-xl md:text-2xl font-bold mb-2">
-              <span className="text-sec-300">{invoice.invoiceId[0]}</span>
+            <h1 className="text-xl md:text-2xl font-bold mb-2 dark:text-white">
+              <span className="text-sec-300 dark:text-sec-200">{invoice.invoiceId[0]}</span>
               {invoice.invoiceId.slice(1)}
             </h1>
-            <p className="text-sec-300 font-medium dark:text-gray-400 text-sm md:text-base">{invoice.projectDescription}</p>
+            <p className="text-sec-300 font-medium dark:text-sec-100 text-sm md:text-base">{invoice.projectDescription}</p>
           </div>
-          <div className="text-left md:text-right text-sec-300 font-medium dark:text-gray-400 text-lg">
+          <div className="text-left md:text-right text-sec-300 font-medium dark:text-sec-100 text-lg">
             <p>{invoice.billFrom.street}</p>
             <p>{invoice.billFrom.city}</p>
             <p>{invoice.billFrom.postCode}</p>
@@ -192,16 +192,16 @@ function InvoiceDetail() {
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-8 mb-8 md:mb-12">
           <div className="col-span-1">
-            <h3 className="text-sec-300 font-medium dark:text-gray-400 text-sm md:text-sm mb-2 md:mb-4">Invoice Date</h3>
-            <p className="font-bold">{formatDate(invoice.invoiceDate)}</p>
+            <h3 className="text-sec-300 font-medium dark:text-sec-100 text-sm md:text-sm mb-2 md:mb-4">Invoice Date</h3>
+            <p className="font-bold dark:text-white">{formatDate(invoice.invoiceDate)}</p>
             
-            <h3 className="text-sec-300 font-medium dark:text-gray-400 text-sm mt-6 md:mt-8 mb-2 md:mb-4">Payment Due</h3>
-            <p className="font-bold">{calculateDueDate(invoice.invoiceDate, invoice.paymentTerms)}</p>
+            <h3 className="text-sec-300 font-medium dark:text-sec-100 text-sm mt-6 md:mt-8 mb-2 md:mb-4">Payment Due</h3>
+            <p className="font-bold dark:text-white">{calculateDueDate(invoice.invoiceDate, invoice.paymentTerms)}</p>
           </div>
           <div className="col-span-1">
-            <h3 className="text-sec-300 font-medium dark:text-gray-400 text-sm mb-2 md:mb-4">Bill To</h3>
-            <p className="font-bold mb-2">{invoice.billTo.clientName}</p>
-            <p className="text-sec-300 font-medium dark:text-gray-400 text-lg">
+            <h3 className="text-sec-300 font-medium dark:text-sec-100 text-sm mb-2 md:mb-4">Bill To</h3>
+            <p className="font-bold mb-2 dark:text-white">{invoice.billTo.clientName}</p>
+            <p className="text-sec-300 font-medium dark:text-sec-100 text-lg">
               {invoice.billTo.street}<br />
               {invoice.billTo.city}<br />
               {invoice.billTo.postCode}<br />
@@ -209,19 +209,19 @@ function InvoiceDetail() {
             </p>
           </div>
           <div className="col-span-2 md:col-span-1 mt-6 md:mt-0">
-            <h3 className="text-sec-300 font-medium dark:text-gray-400 text-sm md:text-sm mb-2 md:mb-4">Sent to</h3>
-            <p className="font-bold text-base">{invoice.billTo.clientEmail}</p>
+            <h3 className="text-sec-300 font-medium dark:text-sec-100 text-sm md:text-sm mb-2 md:mb-4">Sent to</h3>
+            <p className="font-bold text-base dark:text-white">{invoice.billTo.clientEmail}</p>
           </div>
         </div>
 
         {/* Items Table */}
-        <div className="bg-bg-100 dark:bg-gray-700 rounded-t-lg p-6 mt-8 md:mt-12">
+        <div className="bg-bg-100 dark:bg-pri-400 rounded-t-lg p-6 mt-8 md:mt-12">
           {/* Desktop Table Headers */}
           <div className="hidden md:grid grid-cols-12 gap-4 mb-6">
-            <div className="col-span-5 text-sec-300 dark:text-gray-400 text-sm md:text-sm font-medium">Item Name</div>
-            <div className="col-span-2 text-sec-300 dark:text-gray-400 text-sm md:text-sm font-medium text-center">QTY.</div>
-            <div className="col-span-2 text-sec-300 dark:text-gray-400 text-sm md:text-sm font-medium text-right">Price</div>
-            <div className="col-span-3 text-sec-300 dark:text-gray-400 text-sm md:text-sm font-medium text-right">Total</div>
+            <div className="col-span-5 text-sec-300 dark:text-sec-100 text-sm font-medium">Item Name</div>
+            <div className="col-span-2 text-sec-300 dark:text-sec-100 text-sm font-medium text-center">QTY.</div>
+            <div className="col-span-2 text-sec-300 dark:text-sec-100 text-sm font-medium text-right">Price</div>
+            <div className="col-span-3 text-sec-300 dark:text-sec-100 text-sm font-medium text-right">Total</div>
           </div>
 
           {/* Items List */}
@@ -230,8 +230,8 @@ function InvoiceDetail() {
               <div key={index} className="grid grid-cols-12 gap-4">
                 {/* Item Name and Total - Mobile first */}
                 <div className="col-span-8 md:col-span-5 flex flex-col justify-center">
-                  <p className="font-bold capitalize">{item.name}</p>
-                  <p className="text-sm text-sec-300 font-bold dark:text-gray-400 mt-1 md:hidden">
+                  <p className="font-bold capitalize dark:text-white">{item.name}</p>
+                  <p className="text-sm text-sec-300 font-bold dark:text-sec-100 mt-1 md:hidden">
                     {item.quantity} x £ {new Intl.NumberFormat('en-GB', {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2
@@ -240,7 +240,7 @@ function InvoiceDetail() {
                 </div>
                 
                 {/* Total - Mobile */}
-                <div className="col-span-4 text-right md:hidden flex items-center justify-end">
+                <div className="col-span-4 text-right md:hidden flex items-center justify-end dark:text-white">
                   <p className="font-bold">
                     £ {new Intl.NumberFormat('en-GB', {
                       minimumFractionDigits: 2,
@@ -251,13 +251,13 @@ function InvoiceDetail() {
                 
                 {/* Desktop Views - Hidden on mobile */}
                 <div className="hidden md:block md:col-span-2">
-                  <p className="text-sec-300 dark:text-gray-400 text-sm font-medium text-center">
+                  <p className="text-sec-300 dark:text-sec-100 text-sm font-medium text-center">
                     {item.quantity}
                   </p>
                 </div>
                 
                 <div className="hidden md:block md:col-span-2">
-                  <p className="text-sec-300 dark:text-gray-400 text-sm font-bold text-right">
+                  <p className="text-sec-300 dark:text-sec-100 text-sm font-bold text-right">
                     £ {new Intl.NumberFormat('en-GB', {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2
@@ -265,7 +265,7 @@ function InvoiceDetail() {
                   </p>
                 </div>
                 
-                <div className="hidden md:block md:col-span-3">
+                <div className="hidden md:block md:col-span-3 dark:text-white">
                   <p className="font-bold text-right">
                     £ {new Intl.NumberFormat('en-GB', {
                       minimumFractionDigits: 2,
@@ -278,7 +278,7 @@ function InvoiceDetail() {
           </div>
         </div>
                 {/* Total */}
-                <div className="bg-[#373B53] text-white p-6 rounded-b-lg flex justify-between items-center">
+                <div className="bg-[#373B53] dark:bg-sec-400 text-white p-6 rounded-b-lg flex justify-between items-center">
           <span className="text-sm">Amount Due</span>
           <span className="text-2xl font-bold">
           £ {new Intl.NumberFormat('en-GB', {

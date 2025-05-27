@@ -3,6 +3,43 @@ import { QueryClient } from "@tanstack/react-query";
 export const queryClient = new QueryClient();
 const API_BASE_URL = 'http://localhost:5000/api';
 
+// Theme related functions
+export async function getUserTheme() {
+  try {
+    const response = await fetch(`${API_BASE_URL}/user/preferences/theme`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch user theme');
+    }
+    const { theme } = await response.json();
+    return theme;
+  } catch (error) {
+    console.error('Error fetching user theme:', error);
+    return null;
+  }
+}
+
+export async function updateUserTheme(theme) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/user/preferences/theme`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ theme }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update user theme');
+    }
+
+    const result = await response.json();
+    return result.theme;
+  } catch (error) {
+    console.error('Error updating user theme:', error);
+    throw error;
+  }
+}
+
 export async function fetchInvoices({status, signal}) {
     try {
       const params = new URLSearchParams();
@@ -20,7 +57,7 @@ export async function fetchInvoices({status, signal}) {
       }
   
        const { data } = await response.json();
-       return data
+       return data || []
       // return []
     } catch (error) {
       // Ignore AbortError
@@ -132,12 +169,52 @@ export async function deleteInvoice({id, signal}) {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.errors.message || 'Failed to delete invoice');
+      throw new Error(errorData.errors?.message || 'Failed to delete invoice');
     }
 
     return true;
   } catch (error) {
-    console.error(`Error deleting invoice ${id}:`, error);
+    // Don't log AbortError as it's expected when component unmounts
+    if (error.name !== 'AbortError') {
+      console.error(`Error deleting invoice ${id}:`, error);
+    }
+    throw error;
+  }
+}
+
+// Profile image functions
+export async function getProfileImage() {
+  try {
+    const response = await fetch(`${API_BASE_URL}/user/profile-image`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch profile image');
+    }
+    const { profileImage } = await response.json();
+    return profileImage;
+  } catch (error) {
+    console.error('Error fetching profile image:', error);
+    return null;
+  }
+}
+
+export async function updateProfileImage(imageData) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/user/profile-image`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ imageData }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update profile image');
+    }
+
+    const result = await response.json();
+    return result.profileImage;
+  } catch (error) {
+    console.error('Error updating profile image:', error);
     throw error;
   }
 }
