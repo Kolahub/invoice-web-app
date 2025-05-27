@@ -143,8 +143,8 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
   };
 
   return (
-    <div className="h-full flex flex-col custom-scrollbar">
-      <div className="flex-1 overflow-y-auto">
+    <div className="h-full flex flex-col">
+      <div className="flex-1 overflow-y-auto custom-scrollbar">
         <form 
           id="invoice-form" 
           onSubmit={handleSubmit} 
@@ -221,3 +221,7 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
 };
 
 export default CreateInvoiceForm;
+
+// Note: Also update EditInvoiceForm.jsx to apply the same scrollbar class
+// In the Motion.div element, change the className to include 'custom-scrollbar':
+// className="fixed inset-y-0 left-0 top-20 lg:top-0 w-full md:w-[38rem] bg-white dark:bg-bg-200 shadow-2xl z-50 overflow-y-auto custom-scrollbar lg:pl-[120px]"
