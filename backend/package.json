@@ -9,7 +9,12 @@
     "dev": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["invoice", "express", "mongodb", "mongoose"],
+  "keywords": [
+    "invoice",
+    "express",
+    "mongodb",
+    "mongoose"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
