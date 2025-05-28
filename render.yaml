@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: invoice-web-app
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: node backend/src/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        fromDatabase:
+          name: invoice-db
+          property: connectionString
+    plan: free
+    autoDeploy: true
+
+databases:
+  - name: invoice-db
+    databaseName: invoice
+    user: invoice_user
+    plan: free

@@ -37,7 +37,7 @@ function InvoicesDisplay() {
           <ImageIllustrationEmpty />
         </div>
         <div className="text-center mt-16">
-          <p className="text-2xl font-bold mb-6">There is nothing here</p>
+          <p className="text-2xl font-bold mb-6 dark:text-white">There is nothing here</p>
           <p className="text-sec-200 font-medium">
             Create an invoice by clicking the
             <span className="font-bold"> New Invoice</span> button and get started
