@@ -5,6 +5,7 @@ import { useParams, useSubmit, useNavigation, redirect, useActionData } from 're
 import CreateInvoiceForm from './CreateInvoiceForm';
 import { fetchInvoiceById, updateInvoice, queryClient } from '../../utils/http';
 import { processInvoiceFormData } from '../../utils/formUtils';
+import { disableBodyScroll, enableBodyScroll } from '../../utils/scrollLock';
 
 function EditInvoiceForm({ isOpen, onClose }) {
   const formRef = useRef(null);
@@ -93,19 +94,19 @@ function EditInvoiceForm({ isOpen, onClose }) {
     }
   };
 
-  // Close on escape key
+  // Handle background scroll locking and escape key
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
+    const handleKeyDown = (e) => e.key === 'Escape' && onClose();
 
     if (isOpen) {
+      disableBodyScroll();
       document.addEventListener('keydown', handleKeyDown);
+    } else {
+      enableBodyScroll();
     }
 
     return () => {
+      enableBodyScroll();
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen, onClose]);

@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { createInvoice, queryClient } from '../../utils/http';
 import { processInvoiceFormData } from '../../utils/formUtils';
+import { disableBodyScroll, enableBodyScroll } from '../../utils/scrollLock';
 import CreateInvoiceForm from './CreateInvoiceForm';
 
 function InvoiceForm({ isOpen, onClose }) {
@@ -92,19 +93,19 @@ function InvoiceForm({ isOpen, onClose }) {
     }
   };
 
-  // Close on escape key
+  // Handle background scroll locking and escape key
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
+    const handleKeyDown = (e) => e.key === 'Escape' && onClose();
 
     if (isOpen) {
+      disableBodyScroll();
       document.addEventListener('keydown', handleKeyDown);
+    } else {
+      enableBodyScroll();
     }
 
     return () => {
+      enableBodyScroll();
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen, onClose]);
