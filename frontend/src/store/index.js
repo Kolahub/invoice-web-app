@@ -2,8 +2,8 @@ import { configureStore, createSlice } from '@reduxjs/toolkit';
 
 // Initial state
 const initialState = {
-  statusFilter: null, // 'null', 'draft', 'pending', 'paid'
   invoicesCount: 0,
+  invoices: [],
 };
 
 // Create invoice slice
@@ -11,11 +11,6 @@ const invoiceSlice = createSlice({
   name: 'invoices',
   initialState,
   reducers: {
-    // Set status filter
-    setStatusFilter(state, action) {
-      state.statusFilter = action.payload;
-    },
-
     setInvoiceCount(state, action) {
       state.invoicesCount = action.payload;
     },
@@ -32,7 +27,6 @@ const invoiceSlice = createSlice({
 
 // Export actions
 export const {
-  setStatusFilter,
   setInvoiceCount,
   markAsPaid,
 } = invoiceSlice.actions;

@@ -2,7 +2,6 @@ import React, { useRef, useEffect } from 'react';
 import { motion as Motion, AnimatePresence } from 'framer-motion';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { createInvoice, queryClient } from '../../utils/http';
 import { processInvoiceFormData } from '../../utils/formUtils';
 import CreateInvoiceForm from './CreateInvoiceForm';
@@ -17,14 +16,14 @@ function InvoiceForm({ isOpen, onClose }) {
     onSuccess: () => {
       // Invalidate the invoices query to refetch the list
       queryClient.invalidateQueries(['invoices']);
-      toast.success('Invoice created successfully!');
+      console.log('Invoice created successfully!');
       onClose();
       // Redirect to the new invoice detail page
       navigate('/');
     },
     onError: (error) => {
       console.log('Error creating invoice:😭😭', error.message);
-      toast.error(error.message || 'Failed to create invoice');
+      console.error('Failed to create invoice:', error);
       // Clear error after 5 seconds
       const timer = setTimeout(() => {
         reset();
@@ -35,10 +34,10 @@ function InvoiceForm({ isOpen, onClose }) {
     }
   });
 
-  console.log('submitError', submitError);
+  // console.log('submitError', submitError);
   
   // Handle form submission
-  const handleSubmit = (formData) => {
+  const handleSubmit = (formData, onComplete) => {
     console.log('Raw form data:', formData);
     
     // Get the status from formData or default to 'draft' for safety
@@ -49,7 +48,11 @@ function InvoiceForm({ isOpen, onClose }) {
     console.log('Processed data:', processedData);
     
     // Call the mutation with the processed data
-    createMutation(processedData);
+    createMutation(processedData, {
+      onSettled: () => {
+        if (onComplete) onComplete();
+      }
+    });
   };
 
   // Animation variants

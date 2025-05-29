@@ -1,16 +1,17 @@
 import { useQuery } from '@tanstack/react-query'
 import React, { useEffect } from 'react'
 import { fetchInvoices } from '../utils/http'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { addDays, format } from 'date-fns';
 import IconArrowRight from '../assets/icon-arrow-right.svg?react'
 import ImageIllustrationEmpty from '../assets/illustration-empty.svg?react'
 import { setInvoiceCount } from '../store';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 function InvoicesDisplay() {
+  const location = useLocation()
   const dispatch = useDispatch();
-  const status = useSelector((state) => state.invoices.statusFilter);
+  const status = location.pathname.split('/')[2];
   const { data: invoices = [], isPending } = useQuery({
     queryKey: ['invoices', { status }],
     queryFn: ({ queryKey, signal }) => fetchInvoices({ signal, ...queryKey[1] }),

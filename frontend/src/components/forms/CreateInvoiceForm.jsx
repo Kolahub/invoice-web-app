@@ -1,15 +1,22 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { addDays } from 'date-fns';
 import BillFromSection from './BillFromSection';
 import BillToSection from './BillToSection';
 import InvoiceDetailsSection from './InvoiceDetailsSection';
 import ItemListSection from './ItemListSection';
 import FormActions from './FormActions';
-import { useNavigate } from 'react-router-dom';
+import { Form, useNavigate } from 'react-router-dom';
 import IconArrowLeft from '../../assets/icon-arrow-left.svg?react';
 
-const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData, isEditMode = false, submitError }) => {
+const CreateInvoiceForm = ({ onCancel, onSubmit, initialData, isEditMode = false, submitError, isLoading }) => {
+  const [isSaving, setIsSaving] = useState({ draft: false, pending: false, neutral: isLoading });
   const navigate = useNavigate()
+  console.log(isSaving, isLoading);
+
+  useEffect(() => {
+    setIsSaving(prev => ({ ...prev, neutral: isLoading }));
+  }, [isLoading]);
+  
   // Convert array of errors to an object for easier access
   const errors = React.useMemo(() => {
     if (!submitError || !Array.isArray(submitError)) return {};
@@ -80,6 +87,16 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
     const formData = new FormData(e.target);
     const formValues = Object.fromEntries(formData.entries());
     
+    // Get the clicked button's value (status) from the submit event
+    const clickedButton = e.nativeEvent.submitter;
+    const status = clickedButton?.value || 'draft';
+    
+    // Update the form data with the correct status
+    formData.set('status', status);
+    
+    // Set loading state for the clicked button
+    setIsSaving(prev => ({ ...prev, [status]: true }));
+    
     // Process items
     const itemsData = items.map((item, index) => ({
       name: formValues[`itemName${index}`],
@@ -120,10 +137,10 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
       invoiceData.status = e.nativeEvent.submitter?.value || 'pending';
     }
 
-    // Call parent's onSubmit handler
-    if (onSubmit) {
-      onSubmit(invoiceData);
-    }
+    // Call the onSubmit handler with the form data and reset loading state when done
+    onSubmit(invoiceData, () => {
+      setIsSaving(prev => ({ ...prev, [status]: false }));
+    });
   };
 
   const addNewItem = () => {
@@ -145,11 +162,10 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
   return (
     <div className="h-full flex flex-col">
       <div className="flex-1 overflow-y-auto custom-scrollbar">
-        <form 
+        <Form 
           id="invoice-form" 
           onSubmit={handleSubmit} 
-          className="bg-white dark:bg-bg-200 rounded-r-2xl p-6 md:p-8 shadow-[0px_10px_10px_-10px_rgba(72,84,159,0.1)] dark:shadow-[0px_10px_10px_-10px_rgba(0,0,0,0.25)]"
-        >
+          className="bg-white dark:bg-bg-200 rounded-r-2xl p-6 md:p-8 shadow-[0px_10px_10px_-10px_rgba(72,84,159,0.1)] dark:shadow-[0px_10px_10px_-10px_rgba(0,0,0,0.25)]"        >
         <button 
           type="button"
           onClick={() => navigate('..')}
@@ -208,12 +224,12 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
             addNewItem={addNewItem}
             errors={errors}
           />
-        </form>
+        </Form>
       </div>
       
       <FormActions 
         isEditMode={isEditMode}
-        isLoading={isLoading}
+        isLoading={isSaving}
         onCancel={onCancel}
       />
     </div>
@@ -221,7 +237,3 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, isLoading = false, initialData,
 };
 
 export default CreateInvoiceForm;
-
-// Note: Also update EditInvoiceForm.jsx to apply the same scrollbar class
-// In the Motion.div element, change the className to include 'custom-scrollbar':
-// className="fixed inset-y-0 left-0 top-20 lg:top-0 w-full md:w-[38rem] bg-white dark:bg-bg-200 shadow-2xl z-50 overflow-y-auto custom-scrollbar lg:pl-[120px]"

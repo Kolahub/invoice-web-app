@@ -1,38 +1,21 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { motion as Motion, AnimatePresence } from 'framer-motion'
 import IconArrowDown from '../../assets/icon-arrow-down.svg?react'
 import IconCheck from '../../assets/icon-check.svg?react'
-import { useDispatch, useSelector } from 'react-redux'
-import { setStatusFilter } from '../../store'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 function FilterItem() {
-    const dispatch = useDispatch()
     const navigate = useNavigate()
     const location = useLocation()
-    const activeStatus = useSelector((state) => state.invoices.statusFilter)
     const [isFilterOpen, setIsFilterOpen] = useState(false)
 
-    const status = location.pathname.split('/')[2];
-
-    useEffect(() => {
-        if (status) {
-            dispatch(setStatusFilter(status));
-        }
-
-        if(!status) {
-            dispatch(setStatusFilter(null))
-            setIsFilterOpen(false)
-
-        }
-    }, [status, dispatch])
+    const activeStatus = location.pathname.split('/')[2];
 
     const handleToggleFilterAction = function () {
         setIsFilterOpen(!isFilterOpen)
     }
 
     const handleFilterAction = function (status) {
-        dispatch(setStatusFilter(status))
         setIsFilterOpen(false)
         navigate(`/status/${status}`)
     }

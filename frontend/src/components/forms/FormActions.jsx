@@ -1,6 +1,6 @@
 import React from 'react';
 
-const FormActions = ({ isEditMode, isLoading, onCancel }) => {
+const FormActions = ({ isEditMode, isLoading = { draft: false, pending: false }, onCancel }) => {
   return (
 <div className="absolute bottom-0 left-0 right-0 lg:left-[103px] bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700 shadow-[0_-8px_18px_rgba(0,0,0,0.15)]">
       <div className="flex justify-between items-center w-full">
@@ -8,7 +8,8 @@ const FormActions = ({ isEditMode, isLoading, onCancel }) => {
           <button 
             type="button"
             onClick={onCancel}
-            className="cursor-pointer px-4 sm:px-6 py-3 bg-gray-100 text-gray-500 font-bold rounded-full hover:bg-gray-200 transition-colors text-sm sm:text-base"
+            className="cursor-pointer disabled:cursor-not-allowed px-4 sm:px-6 py-3 bg-gray-100 text-gray-500 font-bold rounded-full hover:bg-gray-200 transition-colors text-sm sm:text-base"
+            disabled={isLoading.draft || isLoading.pending}
           >
             Discard
           </button>
@@ -20,7 +21,8 @@ const FormActions = ({ isEditMode, isLoading, onCancel }) => {
               <button 
                 type="button"
                 onClick={onCancel}
-                className="cursor-pointer px-4 sm:px-6 py-3 bg-bg-100 dark:bg-pri-400 text-sec-300 dark:hover:text-sec-100 font-bold rounded-full hover:bg-sec-100 dark:hover:bg-pri-400 transition-colors text-sm sm:text-base"
+                className="cursor-pointer disabled:cursor-not-allowed px-4 sm:px-6 py-3 bg-bg-100 dark:bg-pri-400 text-sec-300 dark:hover:text-sec-100 font-bold rounded-full hover:bg-sec-100 dark:hover:bg-pri-400 transition-colors text-sm sm:text-base"
+                disabled={isLoading.pending || isLoading.neutral}
               >
                 Cancel
               </button>
@@ -29,10 +31,10 @@ const FormActions = ({ isEditMode, isLoading, onCancel }) => {
                 form="invoice-form"
                 name="status"
                 value="update"
-                className="cursor-pointer px-4 sm:px-6 py-3 bg-pri-100 text-white font-bold rounded-full hover:bg-pri-200 transition-colors text-sm sm:text-base"
-                disabled={isLoading}
+                className="cursor-pointer disabled:cursor-not-allowed px-4 sm:px-6 py-3 bg-pri-100 text-white font-bold rounded-full hover:bg-pri-200 transition-colors text-sm sm:text-base "
+                disabled={isLoading.pending || isLoading.neutral}
               >
-                {isLoading ? 'Saving...' : 'Save Changes'}
+                {isLoading.pending || isLoading.neutral ? 'Saving...' : 'Save Changes'}
               </button>
             </>
           ) : (
@@ -42,20 +44,20 @@ const FormActions = ({ isEditMode, isLoading, onCancel }) => {
                 form="invoice-form"
                 name="status"
                 value="draft"
-                className="cursor-pointer px-4 py-3 bg-gray-800 dark:bg-[#373B53] dark:hover:bg-pri-300 text-white font-bold rounded-full hover:bg-gray-700 transition-colors text-sm sm:text-base"
-                disabled={isLoading}
+                className="cursor-pointer disabled:cursor-not-allowed px-4 py-3 bg-gray-800 dark:bg-[#373B53] dark:hover:bg-pri-300 text-white font-bold rounded-full hover:bg-gray-700 transition-colors text-sm sm:text-base"
+                disabled={isLoading.draft || isLoading.pending}
               >
-                {isLoading ? 'Saving...' : 'Save as Draft'}
+                {isLoading.draft ? 'Saving...' : 'Save as Draft'}
               </button>
               <button
                 type="submit"
                 form="invoice-form"
                 name="status"
                 value="pending"
-                className="cursor-pointer px-4 py-3 bg-pri-100 text-white font-bold rounded-full hover:bg-pri-200 transition-colors text-sm sm:text-base"
-                disabled={isLoading}
+                className="cursor-pointer disabled:cursor-not-allowed px-4 py-3 bg-pri-100 text-white font-bold rounded-full hover:bg-pri-200 transition-colors text-sm sm:text-base"
+                disabled={isLoading.pending || isLoading.draft}
               >
-                {isLoading ? 'Saving...' : 'Save & Send'}
+                {isLoading.pending ? 'Saving...' : 'Save & Send'}
               </button>
             </>
           )}

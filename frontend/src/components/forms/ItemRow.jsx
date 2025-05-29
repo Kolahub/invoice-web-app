@@ -5,16 +5,15 @@ const ItemRow = ({ item, index, updateItem, removeItem, canRemove, errors = {} }
   const inputClasses = `w-full p-3 border rounded font-bold 
     bg-white dark:bg-pri-300 
     text-sec-400 dark:text-white 
-    border-sec-100 dark:border-pri-400 
+    ${errors[`items[${index}]Name`] || errors[`items[${index}]Quantity`] || errors[`items[${index}]Price`] 
+      ? 'border-[var(--color-err-100)] focus:ring-[var(--color-err-100)] focus:border-[var(--color-err-100)]' 
+      : 'border-sec-100 dark:border-pri-400 hover:border-pri-100 dark:hover:border-pri-200'
+    }
     focus:ring-1 focus:ring-pri-100 focus:border-pri-100 
     focus:outline-none 
     placeholder-sec-300/60 dark:placeholder-sec-200/60
     transition-colors duration-200
-    [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none 
-    ${errors[`items[${index}]Name`] || errors[`items[${index}]Quantity`] || errors[`items[${index}]Price`] 
-      ? 'border-err-100 focus:ring-err-100 focus:border-err-100' 
-      : 'hover:border-pri-100 dark:hover:border-pri-200'
-    }`;
+    [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`;
 
   return (
     <div className="grid grid-cols-12 gap-4 items-start">

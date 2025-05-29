@@ -26,16 +26,15 @@ const FormInput = ({
           className={`w-full p-3 border rounded font-bold 
             bg-white dark:bg-pri-300 
             text-sec-400 dark:text-white 
-            border-sec-100 dark:border-pri-400 
+            ${error 
+              ? 'border-[var(--color-err-100)] focus:ring-[var(--color-err-100)] focus:border-[var(--color-err-100)]' 
+              : 'border-sec-100 dark:border-pri-400 hover:border-pri-100 dark:hover:border-pri-200'
+            }
             focus:ring-1 focus:ring-pri-100 focus:border-pri-100 
             focus:outline-none 
             caret-pri-200 
             placeholder-sec-300/60 dark:placeholder-sec-200/60
-            transition-colors duration-200
-            ${error 
-              ? 'border-err-100 focus:ring-err-100 focus:border-err-100' 
-              : 'hover:border-pri-100 dark:hover:border-pri-200'
-            }`}
+            transition-colors duration-200`}
           aria-invalid={!!error}
           aria-describedby={`${id}-error`}
           {...props}

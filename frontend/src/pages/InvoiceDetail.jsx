@@ -2,7 +2,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchInvoiceById, deleteInvoice, updateInvoiceStatus } from '../utils/http';
-import { toast } from 'react-toastify';
 import DeleteConfirmationModal from '../components/ui/DeleteConfirmationModal';
 import { format } from 'date-fns';
 import IconArrowLeft from '../assets/icon-arrow-left.svg?react';
@@ -29,11 +28,11 @@ function InvoiceDetail() {
     onSuccess: () => {
       queryClient.invalidateQueries(['invoices']);
       queryClient.invalidateQueries(['invoice', { id }]);
-      toast.success(`Invoice marked as ${invoice.status === 'paid' ? 'unpaid' : 'paid'} successfully!`);
+      console.log(`Invoice marked as ${invoice.status === 'paid' ? 'unpaid' : 'paid'} successfully!`);
     },
     onError: (error) => {
       console.error('Error updating invoice status:', error);
-      toast.error(error.message || 'Failed to update invoice status');
+      console.error('Failed to update invoice status:', error);
     },
   });
 

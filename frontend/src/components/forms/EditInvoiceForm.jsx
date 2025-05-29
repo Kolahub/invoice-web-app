@@ -2,7 +2,6 @@ import React, { useRef, useEffect, useState } from 'react';
 import { motion as Motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useSubmit, useNavigation, redirect, useActionData } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import CreateInvoiceForm from './CreateInvoiceForm';
 import { fetchInvoiceById, updateInvoice, queryClient } from '../../utils/http';
 import { processInvoiceFormData } from '../../utils/formUtils';
@@ -13,7 +12,10 @@ function EditInvoiceForm({ isOpen, onClose }) {
   const { id } = useParams();
   const { state } = useNavigation();
   const actionData = useActionData();
-  const isUpdating = state === 'submitting';
+  const isUpdating = state === 'submitting' || state=== 'loading';
+
+  // console.log(isUpdating, state);
+  
 
   // Local state to manage error display
   const [displayError, setDisplayError] = useState(null);
@@ -204,21 +206,28 @@ async function Action({ request, params }) {
     
     console.log('Sending to server:', updatedData);
     
-    await updateInvoice({ 
+    const response = await updateInvoice({ 
       id: invoiceId, 
       updateData: updatedData 
     });
     
+    if (response?.errors) {
+      console.error('Server validation errors:', response.errors);
+      return { error: response.errors };
+    }
+    
     // Invalidate queries to refetch the updated data
     await queryClient.invalidateQueries(['invoices']);
-    
-    toast.success('Invoice updated successfully!');
+    console.log('Invoice updated successfully!');
     return redirect('..');
   } catch (error) {
-    console.error('Update invoice error:', error);
-    return {
-      error
-    };
+    console.error('Error updating invoice:', error);
+    // Check if error is an array (validation errors from server)
+    if (Array.isArray(error)) {
+      console.error('Validation errors:', error);
+      return { error: error };
+    }
+    return { error: error.message || 'Failed to update invoice' };
   }
 }
 

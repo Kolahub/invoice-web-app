@@ -13,7 +13,7 @@ export async function getUserTheme() {
     const { theme } = await response.json();
     return theme;
   } catch (error) {
-    console.error('Error fetching user theme:', error);
+    console.error('Error fetching user theme:', error); 
     return null;
   }
 }
@@ -43,7 +43,7 @@ export async function updateUserTheme(theme) {
 export async function fetchInvoices({status, signal}) {
     try {
       const params = new URLSearchParams();
-      console.log(status, '😊😊😊');
+      // console.log(status, '😊😊😊');
       
       if (status) params.append('status', status);
   
@@ -125,16 +125,24 @@ export async function updateInvoice({id, updateData}) {
       body: JSON.stringify(updateData),
     });
 
+    const data = await response.json().catch(() => ({}));
+    
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      console.log('Error details:', errorData.errors);
-      throw errorData.errors;
+      console.log('Error details:', data.errors || data);
+      // Return the error data so the calling function can handle it
+      return { errors: Array.isArray(data.errors) ? data.errors : [data] };
     }
 
-    return await response.json();
+    return data;
   } catch (error) {
     console.error(`Error updating invoice ${id}:`, error);
-    throw error;
+    // Return a consistent error format
+    return { 
+      errors: [{
+        message: error.message || 'Failed to update invoice',
+        error: true
+      }] 
+    };
   }
 }
 
