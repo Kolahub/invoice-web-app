@@ -141,14 +141,14 @@ function EditInvoiceForm({ isOpen, onClose }) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <>
+        <div className="fixed inset-0 z-40">
           {/* Overlay */}
           <Motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-black/30 z-40"
+            className="fixed inset-0 bg-black/30"
             onClick={onClose}
           />
           
@@ -159,7 +159,7 @@ function EditInvoiceForm({ isOpen, onClose }) {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="fixed inset-y-0 left-0 top-20 lg:top-0 w-full md:w-[38rem] bg-white dark:bg-bg-200 shadow-2xl z-50 overflow-y-auto custom-scrollbar lg:pl-[120px]"
+            className="fixed inset-y-0 left-0 top-20 lg:top-0 w-full md:w-[38rem] bg-white dark:bg-bg-200 sm:rounded-r-2xl shadow-2xl z-50 pr-8 lg:pl-[120px] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             {invoiceData && (
@@ -169,11 +169,11 @@ function EditInvoiceForm({ isOpen, onClose }) {
                 onCancel={onClose}
                 onSubmit={handleSubmit}
                 isLoading={isUpdating}
-                submitError={displayError} // Use displayError instead of actionData?.error
+                submitError={displayError}
               />
             )}
           </Motion.div>
-        </>
+        </div>
       )}
     </AnimatePresence>
   );

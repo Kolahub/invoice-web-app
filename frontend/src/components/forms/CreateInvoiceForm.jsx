@@ -161,11 +161,8 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, initialData, isEditMode = false
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex-1 overflow-y-auto custom-scrollbar">
-        <Form 
-          id="invoice-form" 
-          onSubmit={handleSubmit} 
-          className="bg-white dark:bg-bg-200 rounded-r-2xl p-6 md:p-8 shadow-[0px_10px_10px_-10px_rgba(72,84,159,0.1)] dark:shadow-[0px_10px_10px_-10px_rgba(0,0,0,0.25)]"        >
+      <div className="flex-1 overflow-hidden flex flex-col">
+        <div className="px-6 md:px-8 pt-6 md:pt-8 flex-shrink-0">
         <button 
           type="button"
           onClick={() => navigate('..')}
@@ -184,6 +181,12 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, initialData, isEditMode = false
             </>
           ) : 'New Invoice'}
         </h2>
+        </div>
+        <Form 
+          id="invoice-form" 
+          onSubmit={handleSubmit} 
+          className="bg-white dark:bg-bg-200 p-6 md:p-8 shadow-[0px_10px_10px_-10px_rgba(72,84,159,0.1)] dark:shadow-[0px_10px_10px_-10px_rgba(0,0,0,0.25)] flex-1 overflow-y-auto custom-scrollbar"
+        >
       
           <BillFromSection 
             initialData={initialData}
@@ -227,11 +230,15 @@ const CreateInvoiceForm = ({ onCancel, onSubmit, initialData, isEditMode = false
         </Form>
       </div>
       
-      <FormActions 
-        isEditMode={isEditMode}
-        isLoading={isSaving}
-        onCancel={onCancel}
-      />
+      <div className="fixed bottom-0 left-0 right-0 md:right-auto md:left-0 md:bottom-0 md:w-[38rem] bg-white dark:bg-bg-200 border-t border-gray-100 dark:border-gray-700 z-10">
+        <div className="px-6 py-4">
+          <FormActions 
+            isEditMode={isEditMode}
+            isLoading={isSaving}
+            onCancel={onCancel}
+          />
+        </div>
+      </div>
     </div>
   );
 };
