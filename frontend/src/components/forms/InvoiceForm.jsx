@@ -131,7 +131,7 @@ function InvoiceForm({ isOpen, onClose }) {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="fixed inset-y-0 left-0 w-full md:w-[38rem] bg-white dark:bg-bg-200 sm:rounded-r-2xl shadow-2xl z-50 pr-8 lg:pl-[120px] overflow-y-auto"
+            className="fixed inset-y-0 left-0 w-full md:w-[38rem] bg-white dark:bg-bg-200 sm:rounded-r-2xl shadow-2xl z-50 pr-2 sm:pr-8 lg:pl-[120px] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <CreateInvoiceForm 
